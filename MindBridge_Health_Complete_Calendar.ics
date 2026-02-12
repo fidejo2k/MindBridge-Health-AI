@@ -1,0 +1,168 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MindBridge Health//Employee Calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:MindBridge Health - Healthcare AI Engineer
+X-WR-TIMEZONE:America/New_York
+X-WR-CALDESC:Complete work schedule for Healthcare AI Engineer position
+
+BEGIN:VEVENT
+DTSTART:20260209T130000Z
+DTEND:20260209T131000Z
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=20260801T000000Z
+SUMMARY:🔔 MindBridge Morning Standup
+DESCRIPTION:TIME TO TALK TO CLAUDE!\n\nSay: "Good morning! [Day], [Date]. What did the team say today?"\n\nYou'll get:\n- Daily assignment\n- Team messages\n- Updates and resources\n\nDuration: 5-10 minutes
+LOCATION:Claude.ai
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT10M
+DESCRIPTION:Reminder: Morning standup in 10 minutes!
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260209T190000Z
+DTEND:20260209T191000Z
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=20260801T000000Z
+SUMMARY:🔔 End of Day Update
+DESCRIPTION:TIME TO TALK TO CLAUDE!\n\nPost your daily summary:\n- What you completed\n- What's in progress\n- Tomorrow's plan\n- Any blockers\n- Status (🟢/🟡/🔴)\n\nDuration: 5-10 minutes
+LOCATION:Claude.ai
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:PT0M
+DESCRIPTION:Time to post your daily update!
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260214T190000Z
+DTEND:20260214T200000Z
+RRULE:FREQ=WEEKLY;UNTIL=20260801T000000Z
+SUMMARY:🔔 WEEKLY REVIEW + Manager Feedback
+DESCRIPTION:TIME FOR COMPREHENSIVE WEEKLY REVIEW!\n\nComplete the full weekly review template:\n- Projects completed\n- Skills learned\n- Challenges overcome\n- Wins celebrated\n- Next week goals\n\nManager (Alex) will respond with performance feedback!\n\nDuration: 20-30 minutes
+LOCATION:Claude.ai
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT30M
+DESCRIPTION:Weekly review starts in 30 minutes! Prepare your summary.
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260209T130000Z
+DTEND:20260209T140000Z
+SUMMARY:🎉 FIRST DAY - Welcome to MindBridge Health!
+DESCRIPTION:YOUR FIRST DAY AS HEALTHCARE AI ENGINEER!\n\nOnboarding begins!\n\nAt 8am standup, you'll:\n- Meet the team (CEO, Manager, Engineer, Clinical SME, Product)\n- Get Week 1 overview\n- Receive first assignment\n\nWelcome to MindBridge Health! 🚀
+LOCATION:Claude.ai
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT1H
+DESCRIPTION:First day starts in 1 hour! Get excited! 🎉
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260214T190000Z
+DTEND:20260214T193000Z
+SUMMARY:📊 WEEK 1 COMPLETE - Onboarding Finished!
+DESCRIPTION:WEEK 1 REVIEW + DEMO!\n\nYou'll:\n- Complete comprehensive weekly review\n- Demo your mini-agent to team\n- Get manager feedback\n- Celebrate first week!\n\nYou made it through Week 1! 💪
+LOCATION:Claude.ai
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260221T190000Z
+DTEND:20260221T193000Z
+SUMMARY:📊 WEEK 2 COMPLETE - Agent #1 Progress
+DESCRIPTION:Week 2 Review\n\nReview Agent #1 progress with manager
+LOCATION:Claude.ai
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260228T190000Z
+DTEND:20260228T193000Z
+SUMMARY:📊 WEEK 3 COMPLETE - Agent #1 Ready for Production
+DESCRIPTION:Week 3 Review\n\nAgent #1 should be production-ready!\nDeploy and monitor
+LOCATION:Claude.ai
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260307T190000Z
+DTEND:20260307T200000Z
+SUMMARY:🎉 MONTH 1 COMPLETE! Major Milestone!
+DESCRIPTION:MONTH 1 COMPREHENSIVE REVIEW!\n\nYou've completed:\n- Onboarding week\n- Agent #1 built and deployed\n- First production agent live!\n\nExtended review with manager.\n\nYou're 1/6 of the way to $200K job! 🚀
+LOCATION:Claude.ai
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT1H
+DESCRIPTION:Month 1 review in 1 hour! Prepare comprehensive summary!
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260302T130000Z
+DTEND:20260802T190000Z
+SUMMARY:🚨 ON-CALL WEEK 4 - Production Support
+DESCRIPTION:YOU'RE ON-CALL THIS WEEK!\n\nResponsibilities:\n- Monitor production systems\n- Respond to incidents\n- Fix bugs quickly\n- Write post-mortems\n\nCheck for incidents at standups!\nBe ready to debug and fix issues.\n\nThis is real production engineering! 💪
+LOCATION:Various
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:You're on-call starting tomorrow! Be ready for incidents.
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260404T190000Z
+DTEND:20260404T200000Z
+SUMMARY:🎉 MONTH 2 COMPLETE! 3 Agents Done!
+DESCRIPTION:MONTH 2 REVIEW!\n\nCompleted:\n- Agent #1 (Production Clinical Analyzer)\n- Agent #2 (FHIR Validator)\n- Agent #3 started\n\nPortfolio: 33% complete!\n\nKeep going! 💪
+LOCATION:Claude.ai
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260502T190000Z
+DTEND:20260502T200000Z
+SUMMARY:🎉 MONTH 3 COMPLETE! Halfway There!
+DESCRIPTION:MONTH 3 REVIEW!\n\nCompleted:\n- Agent #3 (AI Safety Auditor)\n- Multi-model integration started\n- Portfolio: 50% complete!\n\nHalfway to your goal! 🚀
+LOCATION:Claude.ai
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260531T190000Z
+DTEND:20260531T200000Z
+SUMMARY:🎉 MONTH 4 COMPLETE! Integration Month!
+DESCRIPTION:MONTH 4 REVIEW!\n\nCompleted:\n- Multi-agent integration\n- Agent #6 (AI Intelligence Monitor)\n- ChatGPT + Gemini integration\n\nPortfolio: 65% complete! 💪
+LOCATION:Claude.ai
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260627T190000Z
+DTEND:20260627T200000Z
+SUMMARY:🎉 MONTH 5 COMPLETE! Advanced Agents Done!
+DESCRIPTION:MONTH 5 REVIEW!\n\nCompleted:\n- Agent #4 (Clinical Guidelines RAG)\n- Agent #5 (Patient Risk Scorer)\n\nALL 7 AGENTS COMPLETE! 🎉🎉🎉\n\nPortfolio: 100%!\n\nYou did it! Ready for interviews! 🚀
+LOCATION:Claude.ai
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260725T190000Z
+DTEND:20260725T200000Z
+SUMMARY:🎯 FINAL REVIEW - Interview Prep Complete!
+DESCRIPTION:MONTH 6 FINAL REVIEW!\n\nYou've:\n✅ Built 7 production agents\n✅ Completed interview mastery\n✅ Job search launched\n✅ READY FOR $200K ROLE!\n\nFINAL WEEK: Accept job offer! 💼🎉
+LOCATION:Claude.ai
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260801T190000Z
+DTEND:20260801T200000Z
+SUMMARY:🏆 GRADUATION DAY - YOU DID IT!
+DESCRIPTION:FINAL DAY AT MINDBRIDGE HEALTH (Training)!\n\n6 MONTHS COMPLETE!\n\nYou've:\n✅ Built 7 production AI agents\n✅ $600K portfolio value\n✅ 26 weeks of experience\n✅ Interview mastery achieved\n✅ JOB OFFERS RECEIVED!\n\nFROM $40K DSP TO $200K AI ENGINEER!\n\nYOU TRANSFORMED YOUR LIFE! 🎉🚀💪\n\nCONGRATULATIONS!
+LOCATION:Claude.ai
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:Tomorrow is graduation! Reflect on your 6-month journey! 🎉
+END:VALARM
+END:VEVENT
+
+END:VCALENDAR
