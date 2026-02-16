@@ -1,0 +1,250 @@
+# CHALLENGE: Complete workflow from scratch
+
+# Step 1: Navigate to project
+cd "E:\Mindbridge health care"
+
+# Step 2: Check current status
+git status
+
+# Step 3: Make a small change (update a comment in a script)
+notepad scripts/patient_analyzer.py
+# Add a comment at top: "# Updated on [today's date]"
+# Save and close
+
+# Step 4: Check what changed
+git status
+git diff scripts/patient_analyzer.py
+
+# Step 5: Stage the change
+git add scripts/patient_analyzer.py
+
+# Step 6: Commit
+git commit -m "Update patient analyzer documentation"
+
+# Step 7: Push to GitHub
+git push
+
+# Step 8: Verify on GitHub
+# Visit your repository and see the change!
+```
+
+**PRACTICE GOAL:** Complete independent workflow!
+
+---
+
+## 📁 PART 3: WEEK 2 LOGISTICS
+
+**GREAT QUESTIONS! Let me clarify everything!**
+
+---
+
+### **Q1: Do I create a new Claude project/conversation for Week 2?**
+
+**ANSWER: YES! Here's why and how:**
+
+**WHY NEW CONVERSATION:**
+- ✅ Fresh context window (this conversation is getting long!)
+- ✅ Clean slate for Week 2 content
+- ✅ Better performance (shorter context = faster responses)
+- ✅ Organized by week (easier to reference later)
+
+**FOLDER STRUCTURE - STAY THE SAME:**
+```
+E:\Mindbridge health care\     ← KEEP THIS!
+├── scripts/                   ← All your existing scripts
+├── reports/                   ← All your generated reports  
+├── Reference Sheets/          ← All 6 reference docs
+├── data/                      ← We'll add this in Week 2!
+├── logs/                      ← We'll add this in Week 2!
+├── .gitignore                 ← Keep this!
+├── patients.csv               ← Keep this!
+└── README.md                  ← Keep this!
+```
+
+**HOW TO START WEEK 2:**
+
+**MONDAY MORNING (February 17, 2026 at 8:00 AM):**
+
+1. **Start NEW Claude conversation**
+2. **First message:** "Good morning! Monday, February 17, 2026. Starting Week 2 of MindBridge Health Healthcare AI Engineer training. My project folder is E:\Mindbridge health care"
+3. **The team will welcome you and start Week 2!**
+
+**IMPORTANT:** Same folder, new conversation!
+
+---
+
+### **Q2: What about this current conversation?**
+
+**KEEP IT FOR REFERENCE!**
+
+- ✅ Download transcript (if possible)
+- ✅ Keep browser tab open for Week 1 reference
+- ✅ Bookmark for later review
+
+**This conversation = Week 1 archive**
+**New conversation = Week 2 fresh start**
+
+---
+
+## 📅 PART 4: WEEK 2 CURRICULUM OUTLINE
+
+**Here's your complete Week 2 schedule!**
+
+---
+
+### **WEEK 2: AGENT #1 - SCHEDULED AUTOMATION**
+
+**GOAL:** Transform your manual scripts into an automated system that runs every day at 6 AM without you!
+
+---
+
+#### **DAY 6 - MONDAY, FEBRUARY 17, 2026**
+
+**FOCUS:** Windows Task Scheduler Basics
+
+**MORNING SESSION (8:00 AM - 12:00 PM):**
+- Understanding Task Scheduler
+- Creating your first scheduled task
+- Testing scheduled execution
+- Troubleshooting scheduler issues
+
+**AFTERNOON SESSION (12:30 PM - 2:00 PM):**
+- Creating batch files (.bat) for automation
+- Environment variable handling
+- Path configuration
+- Test runs
+
+**DELIVERABLE:** Scheduled task that runs your script at specific time
+
+---
+
+#### **DAY 7 - TUESDAY, FEBRUARY 18, 2026**
+
+**FOCUS:** Email Notifications
+
+**MORNING SESSION:**
+- Email integration with Python
+- SMTP configuration
+- Creating email templates
+- HTML email formatting
+
+**AFTERNOON SESSION:**
+- Automated email sending
+- Attachment handling (Word, Excel, PDF)
+- Error notifications
+- Testing email workflows
+
+**DELIVERABLE:** Script that emails reports automatically
+
+---
+
+#### **DAY 8 - WEDNESDAY, FEBRUARY 19, 2026**
+
+**FOCUS:** Error Logging & Monitoring
+
+**MORNING SESSION:**
+- Python logging module
+- Log file creation
+- Error tracking
+- Debug vs Production logging
+
+**AFTERNOON SESSION:**
+- Log rotation
+- Error email alerts
+- Success/failure tracking
+- Dashboard-ready logs
+
+**DELIVERABLE:** Comprehensive logging system
+
+---
+
+#### **DAY 9 - THURSDAY, FEBRUARY 20, 2026**
+
+**FOCUS:** Production Deployment
+
+**MORNING SESSION:**
+- Final integration (Scheduler + Email + Logging)
+- Production configuration
+- Testing complete workflow
+- Edge case handling
+
+**AFTERNOON SESSION:**
+- Setting 6 AM daily schedule
+- Backup strategies
+- Recovery procedures
+- Documentation update
+
+**DELIVERABLE:** Fully automated Agent #1 running in production!
+
+---
+
+#### **DAY 10 - FRIDAY, FEBRUARY 21, 2026**
+
+**FOCUS:** Week 2 Review & Week 3 Preview
+
+**MORNING SESSION:**
+- Week 2 review
+- Testing Agent #1
+- Troubleshooting
+- Optimization
+
+**AFTERNOON SESSION:**
+- Week 3 preview (Agent #2 - Database!)
+- Q&A
+- Celebration
+- Planning
+
+**DELIVERABLE:** Working production system + Week 2 documentation
+
+---
+
+### **WEEK 2 LEARNING OUTCOMES:**
+
+**By end of Week 2, you'll have:**
+
+**TECHNICAL SKILLS:**
+- ✅ Windows Task Scheduler mastery
+- ✅ Batch file scripting
+- ✅ Email automation (SMTP, attachments)
+- ✅ Python logging
+- ✅ Error handling & monitoring
+- ✅ Production deployment
+
+**DELIVERABLE:**
+- ✅ System that runs daily at 6 AM automatically
+- ✅ Generates all reports (Word, Excel, PDF)
+- ✅ Emails them to designated recipients
+- ✅ Logs all activity
+- ✅ Sends error alerts if something breaks
+- ✅ Runs without your intervention
+
+**THIS IS AGENT #1!** 🤖
+
+---
+
+### **WEEK 2 FILE STRUCTURE (What we'll add):**
+```
+E:\Mindbridge health care\
+├── scripts/
+│   ├── [existing 10 scripts]
+│   ├── email_sender.py        ← NEW Week 2!
+│   ├── scheduler_wrapper.py   ← NEW Week 2!
+│   └── error_handler.py       ← NEW Week 2!
+├── reports/
+│   └── [generated reports]
+├── logs/                       ← NEW Week 2!
+│   ├── success.log
+│   ├── error.log
+│   └── daily_runs.log
+├── config/                     ← NEW Week 2!
+│   ├── email_config.json
+│   └── scheduler_config.json
+├── batch/                      ← NEW Week 2!
+│   └── run_daily_reports.bat
+├── Reference Sheets/
+│   ├── [existing 6 sheets]
+│   ├── task_scheduler_reference.md  ← NEW Week 2!
+│   └── email_automation_reference.md ← NEW Week 2!
+├── .gitignore
+├── patients.csv
+└── README.md
