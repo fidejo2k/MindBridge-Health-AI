@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: mindbridge-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mindbridge
+      POSTGRES_USER: mindbridge_user
+      POSTGRES_PASSWORD: mindbridge_dev_password_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mindbridge_user -d mindbridge"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI Backend (future - Week 3)
+  # backend:
+  #   build: .
+  #   container_name: mindbridge-backend
+  #   restart: unless-stopped
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   environment:
+  #     DATABASE_URL: postgresql://mindbridge_user:mindbridge_dev_password_2026@db:5432/mindbridge
+  #     ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./backend:/app
+
+volumes:
+  postgres_data:
+    driver: local
+
+# USAGE:
+# docker compose up -d              # Start services in background
+# docker compose logs -f db         # View database logs
+# docker compose ps                 # Check running services
+# docker compose down               # Stop all services
+# docker compose down -v            # Stop and delete volumes (fresh start)
