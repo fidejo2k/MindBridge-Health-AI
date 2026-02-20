@@ -644,3 +644,78 @@ E:\Mindbridge health care\Reference Sheets\
 ├── staying_current_guide.md
 ├── document_generation_reference.md
 └── git_github_reference.md  ← NEW!
+
+
+
+
+
+
+# Add all the organized files
+git add --all
+
+# Verify reports/ is STILL untracked (not staged)
+git status
+
+# Commit the organization
+git commit -m "Day 9-10: Folder organization + Railway deployment
+
+FOLDER ORGANIZATION COMPLETE:
+✅ Moved all documentation to docs/
+✅ Moved all scripts to scripts/
+✅ Moved schedule files to docs/schedule/
+✅ Clean root directory (only essential config files)
+✅ Professional GitHub structure
+
+Files organized:
+- docs/ - COMPLETE_ROADMAP, COURSE_MATERIAL_ANALYSIS, guides
+- scripts/ - All Python and PowerShell automation scripts
+- docs/schedule/ - DAY_9_PLAN and timeline documents
+
+Root directory now contains ONLY:
+- README.md
+- docker-compose.yml
+- .gitignore
+- .dockerignore
+- .env.example
+
+RAILWAY DEPLOYMENT (Day 9):
+✅ PostgreSQL 17 deployed to switchback.proxy.rlwy.net
+✅ MindBridge schema with 10 behavioral health patients
+✅ Production reports generated from cloud database
+✅ Performance indexes created
+
+Status: 9/90 days complete | Interview ready: 85%
+Next: Day 10 morning quiz + Week 2 wrap-up"
+
+# Push to GitHub
+git push origin main
+```
+
+---
+
+## **📊 WHAT YOUR GITHUB NOW LOOKS LIKE**
+```
+MindBridge-Health-AI/
+├── .claude/
+├── agents/
+├── backend/
+├── data/
+├── database/
+├── docs/              ← All documentation here
+│   ├── schedule/      ← Plans and timelines
+│   ├── COMPLETE_ROADMAP.md
+│   ├── COURSE_MATERIAL_ANALYSIS.md
+│   └── DOCKER_SETUP_GUIDE.md
+├── frontend/
+├── infrastructure/
+├── portfolio/
+├── reference/
+├── scripts/           ← All automation scripts
+│   ├── generate_railway_report.py
+│   ├── setup_railway_mindbridge.py
+│   └── test_docker_db.py
+├── .dockerignore
+├── .env.example
+├── .gitignore
+├── docker-compose.yml
+└── README.md
