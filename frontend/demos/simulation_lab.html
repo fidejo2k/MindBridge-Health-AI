@@ -457,6 +457,20 @@
           <div class="tag tag-sim">Simulation</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('vercel_build_fail')" id="btn-vercel_build_fail">
+        <span class="icon">🔨</span>
+        <span class="info">
+          <div class="name">Vercel Build Fails</div>
+          <div class="tag tag-sim">Simulation</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('nextjs_404')" id="btn-nextjs_404">
+        <span class="icon">🗂️</span>
+        <span class="info">
+          <div class="name">Dynamic Route 404</div>
+          <div class="tag tag-sim">Simulation</div>
+        </span>
+      </button>
     </div>
 
     <div class="sidebar-section">
@@ -538,6 +552,27 @@
           <div class="tag tag-int">Interview</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('frontend_arch')" id="btn-frontend_arch">
+        <span class="icon">🏗️</span>
+        <span class="info">
+          <div class="name">MindBridge Frontend Architecture</div>
+          <div class="tag tag-int">Interview</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('nextjs_vs_react')" id="btn-nextjs_vs_react">
+        <span class="icon">⚛️</span>
+        <span class="info">
+          <div class="name">Why Next.js Over React?</div>
+          <div class="tag tag-int">Interview</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('add_auth')" id="btn-add_auth">
+        <span class="icon">🔐</span>
+        <span class="info">
+          <div class="name">Add Auth to Dashboard</div>
+          <div class="tag tag-int">Interview</div>
+        </span>
+      </button>
     </div>
 
     <div class="sidebar-section">
@@ -581,6 +616,27 @@
         <span class="icon">📋</span>
         <span class="info">
           <div class="name">HL7 v2 Parsing</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('server_client')" id="btn-server_client">
+        <span class="icon">⚡</span>
+        <span class="info">
+          <div class="name">Server vs Client Components</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('cicd_concept')" id="btn-cicd_concept">
+        <span class="icon">🔄</span>
+        <span class="info">
+          <div class="name">CI/CD Pipeline</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('mindbridge_e2e')" id="btn-mindbridge_e2e">
+        <span class="icon">🗺️</span>
+        <span class="info">
+          <div class="name">MindBridge End-to-End</div>
           <div class="tag tag-con">Concept</div>
         </span>
       </button>
@@ -687,7 +743,7 @@
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
-        <div class="stat-value" style="color:var(--accent)">30</div>
+        <div class="stat-value" style="color:var(--accent)">38</div>
         <div class="stat-label">Total Scenarios</div>
       </div>
       <div class="stat-divider"></div>
@@ -1868,6 +1924,225 @@ If 3 failed attempts → Alert ops immediately<br>
 If 10 failed attempts → Trigger automatic failover<br><br>
 Alert channels: Email + Slack + Page on-call engineer<br><br>
 <strong>Interview gold:</strong> "Healthcare systems can't be down. Plan for failure before it happens. Replication + automatic failover means case managers never notice a database failure. RPO < 5 min, RTO < 10 min. Drill it quarterly so you're confident it actually works."`
+  },
+
+  frontend_arch: {
+    type: "interview",
+    title: "Walk Through MindBridge Frontend Architecture",
+    question: "Walk me through the MindBridge frontend architecture. How is it structured, what decisions did you make, and why?",
+    context: "This is your home turf. You built it. Nobody knows it better than you. Use the STAR framework: Structure → Approach → Result.",
+    ideal: `<strong>STRUCTURE:</strong> "MindBridge uses Next.js 14 with the App Router for the frontend, deployed on Vercel. Three pages: Login (app/page.tsx), Dashboard (app/dashboard/page.tsx), and Patient Detail (app/patients/[id]/page.tsx)."<br><br>
+<strong>ARCHITECTURE DECISIONS:</strong><br>
+"I used dynamic routing with bracket notation for the patient detail view — [id] matches any patient UUID from the database. This is Next.js App Router file-based routing: every folder inside /app becomes a URL segment, every page.tsx becomes a page."<br><br>
+"The login page is a Client Component using 'use client' and useRouter for post-submit redirect. The dashboard and patient detail are Server Components since they just display data — keeping them server-side means faster loads and better SEO."<br><br>
+"Styling is Tailwind CSS throughout — utility classes gave me a consistent design system without a dedicated designer. The constraint of predefined values (slate-900, blue-600) actually produces more consistent results than freeform CSS."<br><br>
+<strong>HIPAA DESIGN CHOICE:</strong><br>
+"I added a demo environment banner to make clear all patient data is fictional. In production, I'd add NextAuth.js middleware that blocks /dashboard and /patients/* without a valid session — unauthenticated users redirect to login automatically."<br><br>
+<strong>RESULT:</strong><br>
+"The frontend is live at mind-bridge-health-ai.vercel.app. Every git push to main auto-deploys via Vercel's CI/CD pipeline in under 60 seconds. Employers can click the live demo link right now."<br><br>
+<strong>WHY THIS ANSWER WORKS:</strong> Shows architecture thinking, explains tradeoffs, mentions HIPAA awareness, ends with live evidence.`
+  },
+
+  nextjs_vs_react: {
+    type: "interview",
+    title: "Why Next.js Over Plain React?",
+    question: "Why did you choose Next.js for MindBridge instead of plain React with Vite or Create React App?",
+    context: "Show you understand the tradeoffs. This isn't about memorizing features — it's about making deliberate decisions.",
+    ideal: `<strong>Three reasons Next.js was the right choice for MindBridge:</strong><br><br>
+<strong>1. Server-Side Rendering for Healthcare:</strong><br>
+Patient dashboards need to load fast. Server Components render on the server and send HTML to the browser — no waiting for JavaScript to load before seeing data. For a clinician checking a patient before an appointment, every second matters. Plain React would send an empty HTML shell, then load JS, then fetch data, then render — three round trips. Next.js does it in one.<br><br>
+<strong>2. File-Based Routing (Zero Config):</strong><br>
+With plain React + React Router, I'd write routing configuration manually. With Next.js, creating app/patients/[id]/page.tsx automatically creates the /patients/:id route. For a solo developer moving fast, that's hours saved per week.<br><br>
+<strong>3. Vercel Integration:</strong><br>
+Next.js is made by the same team as Vercel. Zero-config deployment, automatic CI/CD, edge network — push to GitHub, live in 60 seconds. With plain React on a custom server, that's a week of DevOps work.<br><br>
+<strong>When plain React would be better:</strong><br>
+If MindBridge were a highly interactive app (think Google Docs, real-time collaboration), where SEO doesn't matter and all rendering is client-side anyway, plain React + Vite would be faster to build and lighter to run.<br><br>
+<strong>Interview gold:</strong> "I chose Next.js not because it's popular, but because the specific requirements — fast loads for clinical workflows, quick deployment, file-based routing for a small team — made it the right tool."`
+  },
+
+  add_auth: {
+    type: "interview",
+    title: "Add Authentication to Protect the Dashboard",
+    question: "The MindBridge dashboard is currently publicly accessible. How would you add proper authentication to protect patient data?",
+    context: "This tests both technical implementation knowledge AND HIPAA awareness. Show you think about security as architecture, not afterthought.",
+    ideal: `<strong>CURRENT STATE:</strong> Any URL like /dashboard is accessible without logging in. Fine for portfolio demo with fake data, unacceptable for production with real PHI.<br><br>
+<strong>IMPLEMENTATION PLAN — NextAuth.js:</strong><br><br>
+<strong>Step 1 — Install:</strong> npm install next-auth<br><br>
+<strong>Step 2 — Create auth handler:</strong><br>
+File: app/api/auth/[...nextauth]/route.ts<br>
+This single file handles all auth routes automatically: /api/auth/signin, /api/auth/callback, /api/auth/session.<br><br>
+Configure CredentialsProvider to validate against FastAPI backend:<br>
+CredentialsProvider({ async authorize(credentials) {<br>
+  const res = await fetch('https://api.mindbridge.railway.app/auth/verify', { method: 'POST', body: JSON.stringify(credentials) });<br>
+  if (res.ok) return await res.json();<br>
+  return null;<br>
+}})<br><br>
+<strong>Step 3 — Add middleware (the key piece):</strong><br>
+File: middleware.ts at project root<br>
+export { default } from 'next-auth/middleware';<br>
+export const config = { matcher: ['/dashboard/:path*', '/patients/:path*'] };<br><br>
+This runs before EVERY request to /dashboard or /patients. Unauthenticated users are redirected to /login automatically. No code changes needed in the page components.<br><br>
+<strong>Step 4 — Access session in components:</strong><br>
+const session = await getServerSession(); // Server-side, no API call<br>
+if (!session) redirect('/'); // Belt and suspenders<br><br>
+<strong>HIPAA-SPECIFIC ADDITIONS:</strong><br>
+- JWT tokens expire after 8 hours (one clinical shift)<br>
+- Failed login attempts logged to audit_log<br>
+- Session invalidated on logout (can't reuse old tokens)<br>
+- MFA required for admin roles<br><br>
+<strong>Interview gold:</strong> "Authentication in healthcare isn't just username/password. It's session expiry aligned with shift lengths, MFA for privileged roles, and audit logging of every login and logout. That's what distinguishes a HIPAA-compliant system from a generic web app."`
+  },
+
+  vercel_build_fail: {
+    type: "simulation",
+    title: "Vercel Build Fails on Deploy",
+    question: "You push to GitHub and Vercel's deployment fails with: 'Error: Build failed. Exit code 1'. The site reverts to the previous version. How do you debug it?",
+    context: "This is a real scenario you'll face. Show systematic debugging, not panic.",
+    ideal: `<strong>STEP 1 — Read the build logs (always start here):</strong><br>
+Go to Vercel Dashboard → Deployments → click the failed deployment → View Build Logs.<br>
+Scroll to the RED error. It will tell you exactly what failed.<br>
+Don't guess — read the error.<br><br>
+<strong>COMMON NEXT.JS BUILD FAILURES:</strong><br><br>
+<strong>TypeScript error:</strong><br>
+"Type 'string' is not assignable to type 'number'"<br>
+Fix: Your type definition doesn't match what you're passing. Find the line number in the error, fix the type.<br><br>
+<strong>Missing module:</strong><br>
+"Cannot find module 'some-package'"<br>
+Fix: Package installed locally but not in package.json. Run: npm install some-package, commit package.json and package-lock.json.<br><br>
+<strong>Next.js 15 async params (you've already seen this one):</strong><br>
+"Error: params.id is undefined"<br>
+Fix: Add async + await params as Promise. The exact bug you fixed today.<br><br>
+<strong>Environment variable missing:</strong><br>
+"process.env.NEXT_PUBLIC_API_URL is undefined"<br>
+Fix: Variable exists in .env.local but wasn't added to Vercel's environment variables dashboard.<br>
+Go to: Vercel → Project → Settings → Environment Variables → Add it.<br><br>
+<strong>STEP 2 — Reproduce locally:</strong><br>
+npm run build<br>
+If it fails locally, you can fix it faster. If it passes locally but fails on Vercel, it's an environment variable or dependency issue.<br><br>
+<strong>STEP 3 — Fix and push:</strong><br>
+Once fixed locally, push to GitHub. Vercel auto-triggers a new build. Previous version stays live until new build succeeds.<br><br>
+<strong>The safety net:</strong><br>
+Vercel NEVER takes down your live site for a failed build. Previous deployment stays live. Case managers continue working while you fix the error. That's why CI/CD is safe for production.`
+  },
+
+  nextjs_404: {
+    type: "simulation",
+    title: "Dynamic Route Returns 404",
+    question: "You create app/patients/id/page.tsx and navigate to /patients/1 — you get a 404. What's wrong and how do you fix it?",
+    context: "This is the exact bug you hit today. Own it — you know the answer cold.",
+    ideal: `<strong>THE CAUSE:</strong><br>
+The folder is named 'id' (no brackets) instead of '[id]' (with brackets).<br><br>
+In Next.js App Router, square brackets are REQUIRED for dynamic segments:<br>
+app/patients/id/page.tsx → matches ONLY the literal URL /patients/id (not useful)<br>
+app/patients/[id]/page.tsx → matches /patients/1, /patients/2, /patients/any-uuid<br><br>
+<strong>THE FIX:</strong><br>
+Rename the folder from 'id' to '[id]' — brackets included.<br>
+On Windows: Right-click → Rename → type [id]<br>
+Or in terminal: mv app/patients/id app/patients/[id]<br><br>
+<strong>SECOND ISSUE — Next.js 15 async params:</strong><br>
+Even with the correct folder name, Next.js 15 requires params to be awaited:<br><br>
+WRONG (Next.js 14 style):<br>
+export default function Page({ params }: { params: { id: string } }) {<br>
+  const patient = data[params.id]; // params.id is undefined in Next.js 15<br>
+}<br><br>
+CORRECT (Next.js 15 style):<br>
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {<br>
+  const { id } = await params; // Must await the Promise<br>
+  const patient = data[id];<br>
+}<br><br>
+<strong>How to remember:</strong><br>
+Next.js 15 made params async to support streaming and server components better. If you see 404 on dynamic routes, check: (1) brackets in folder name, (2) async/await on params.<br><br>
+<strong>Interview gold:</strong> "I hit this exact bug in production on Day 1 of my frontend build. Fixed it in 2 minutes once I understood the pattern. Now I always check folder names and Next.js version when dynamic routes return 404."`,
+  },
+
+  server_client: {
+    type: "concept",
+    title: "Server vs Client Components in Next.js",
+    question: "Explain the difference between Server Components and Client Components in Next.js. When does MindBridge use each?",
+    context: "This is one of the most common Next.js interview questions. Show you understand the WHY, not just the syntax.",
+    ideal: `<strong>SERVER COMPONENTS (default in Next.js App Router):</strong><br>
+Render on the server. HTML is sent to the browser. JavaScript is NOT sent to the browser for server components.<br><br>
+Characteristics:<br>
+- Can access databases, file system, secrets directly<br>
+- Cannot use useState, useEffect, onClick, onChange<br>
+- Cannot use browser APIs (window, document, localStorage)<br>
+- Faster: Less JavaScript shipped to browser<br>
+- Better SEO: Content is in the HTML, search engines can read it<br><br>
+<strong>CLIENT COMPONENTS ('use client' at top of file):</strong><br>
+Render in the browser. Full React interactivity available.<br><br>
+Characteristics:<br>
+- CAN use useState, useEffect, onClick, useRouter<br>
+- CAN use browser APIs<br>
+- Cannot access server-only resources directly (database, secrets)<br>
+- More JavaScript shipped to browser<br><br>
+<strong>MindBridge examples:</strong><br><br>
+Login page = CLIENT COMPONENT because:<br>
+'use client'<br>
+import { useRouter } from 'next/navigation';<br>
+// Needs useRouter for redirect after form submit<br>
+// Needs onClick for the Sign In button<br><br>
+Dashboard = SERVER COMPONENT because:<br>
+// Just displays data — no interactivity needed<br>
+// Could fetch from database directly (skipping API layer)<br>
+// Faster, no JS overhead<br><br>
+Patient Detail = SERVER COMPONENT because:<br>
+// Just renders patient data<br>
+// async function with await params<br>
+// No user interactions needed<br><br>
+<strong>Rule of thumb:</strong><br>
+Start with Server Component (default). Add 'use client' only when you need: onClick, onChange, useState, useEffect, useRouter, or any browser API.<br><br>
+<strong>Interview gold:</strong> "I default to Server Components for performance. Each Client Component adds JavaScript to the browser bundle. In a healthcare app where clinicians may be on older hospital computers, minimizing JavaScript = better performance = faster patient care."`
+  },
+
+  cicd_concept: {
+    type: "concept",
+    title: "CI/CD Pipeline in MindBridge",
+    question: "Explain CI/CD and walk me through exactly how MindBridge's pipeline works from git push to live deployment.",
+    context: "CI/CD is a must-know for any engineering role. Show you've lived it, not just read about it.",
+    ideal: `<strong>What CI/CD means:</strong><br>
+CI (Continuous Integration): Every code push automatically builds and tests the code.<br>
+CD (Continuous Deployment): If the build passes, automatically deploy to production.<br><br>
+The goal: Remove manual steps from deployment. No more "can you deploy this for me?" — push to main, it's live.<br><br>
+<strong>MindBridge's exact CI/CD pipeline:</strong><br><br>
+<strong>STEP 1 — Developer pushes code:</strong><br>
+git add . && git commit -m "Add demo banner" && git push origin main<br>
+Git push takes ~2 seconds.<br><br>
+<strong>STEP 2 — GitHub receives the push:</strong><br>
+GitHub stores the new commit. Triggers a webhook notification to Vercel: "New code pushed to fidelis-emmanuel/MindBridge-Health-AI main branch."<br><br>
+<strong>STEP 3 — Vercel starts build:</strong><br>
+Vercel clones the repository. Navigates to Root Directory: frontend/patient-portal. Runs: npm install (installs dependencies). Runs: npm run build (compiles Next.js for production). Checks for TypeScript errors, missing modules, any build failures.<br><br>
+<strong>STEP 4a — Build succeeds:</strong><br>
+Vercel deploys compiled files to its global edge network (100+ locations worldwide). Updates the production URL (mind-bridge-health-ai.vercel.app) to serve new version. Total time: ~60 seconds from git push to live.<br><br>
+<strong>STEP 4b — Build fails:</strong><br>
+Vercel keeps the PREVIOUS version live. No downtime. Developer receives email: "Build failed." Developer reads logs, fixes the error, pushes again.<br><br>
+<strong>Why this matters for healthcare:</strong><br>
+"Deploying broken code to a healthcare system could prevent case managers from accessing patient data or show incorrect risk levels. CI/CD means broken code NEVER reaches production — the pipeline is the safety net."<br><br>
+<strong>What we'd add in production:</strong><br>
+Automated tests run in CI before deployment: npm test. If tests fail, build fails, code doesn't deploy. This catches regressions before real users see them.<br><br>
+<strong>Interview gold:</strong> "CI/CD isn't just convenience — it's patient safety. If a deployment breaks MindBridge's risk assessment display, case managers might miss a HIGH-risk patient. The pipeline prevents that."`
+  },
+
+  mindbridge_e2e: {
+    type: "concept",
+    title: "MindBridge End-to-End System Walkthrough",
+    question: "Walk me through the complete MindBridge Health AI system — from the moment a case manager opens the browser to the moment they see a patient's risk score. Every layer.",
+    context: "This is your home turf question. You built every layer of this. An interviewer asking this is giving you 5 minutes of free talking time. Use it.",
+    ideal: `<strong>THE FULL STACK JOURNEY:</strong><br><br>
+<strong>LAYER 1 — Browser (Next.js Frontend on Vercel):</strong><br>
+Case manager navigates to mind-bridge-health-ai.vercel.app. Vercel's edge network (100+ locations globally) serves the Next.js app from the nearest server. Login page renders — Server Component sends HTML directly, no JS loading needed.<br><br>
+<strong>LAYER 2 — Authentication:</strong><br>
+Case manager enters credentials. 'use client' login component triggers useRouter. POST /api/auth/verify sent to FastAPI backend. FastAPI checks email against PostgreSQL users table, bcrypt.verify() checks password hash (plain passwords never stored). JWT token issued, stored in httpOnly cookie (XSS-proof). Case manager is now authenticated.<br><br>
+<strong>LAYER 3 — Dashboard Load:</strong><br>
+Dashboard page (Server Component) loads. GET /api/patients sent to FastAPI with Bearer JWT token. FastAPI middleware validates JWT, extracts clinic_id. PostgreSQL Row-Level Security + WHERE clinic_id = user.clinic_id — case manager sees ONLY their clinic's patients. Response: 10 patients with risk levels, diagnoses, last assessment dates.<br><br>
+<strong>LAYER 4 — Risk Screening:</strong><br>
+Case manager clicks "Screen Patient" for Marcus Thompson. POST /api/screenings sent to FastAPI. FastAPI validates JWT (authenticated) and role (has 'analyst' permission). Patient data fetched from PostgreSQL. Structured prompt sent to Claude API: medication_adherence, appointments_missed, crisis_calls_30days, diagnosis. Claude returns: risk_level=HIGH, primary_factor="Medication non-adherence", action="Immediate outreach". ACID transaction writes: screening result + patient risk update + audit log entry — all three succeed or none do.<br><br>
+<strong>LAYER 5 — HIPAA Compliance (runs on every request):</strong><br>
+Every API call logs to immutable audit_log: user_id, patient_id, action, timestamp, IP. Encryption at rest (AES-256 PostgreSQL volumes) and in transit (TLS 1.3). JWT expires after 8 hours — aligns with clinical shift length.<br><br>
+<strong>LAYER 6 — Report Generation:</strong><br>
+Case manager clicks "Generate Report." Python-docx creates Word document. openpyxl creates Excel spreadsheet. ReportLab creates PDF. All three formats generated from same data. Reports saved to /reports folder (excluded from git by .gitignore — HIPAA compliance).<br><br>
+<strong>THE TECH STACK SUMMARY:</strong><br>
+Frontend: Next.js 14 (Vercel) → FastAPI backend (Railway) → PostgreSQL 17 (Railway) → Claude AI (Anthropic) → Multi-format reports<br><br>
+<strong>Interview gold:</strong> "I built every layer of this system, from database schema to frontend components. The domain expertise from 10 years in behavioral health shaped every architectural decision — the alert thresholds, the HIPAA audit patterns, the report formats. That's not something you get from a computer science degree."`
   }
 };
 
