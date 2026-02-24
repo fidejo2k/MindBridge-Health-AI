@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindBridge Context Window Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --border: #1e2d45;
+    --clinician: #00d4ff;
+    --clinician-dim: rgba(0, 212, 255, 0.08);
+    --patient: #7c3aed;
+    --patient-dim: rgba(124, 58, 237, 0.08);
+    --admin: #10b981;
+    --admin-dim: rgba(16, 185, 129, 0.08);
+    --claude: #f59e0b;
+    --claude-dim: rgba(245, 158, 11, 0.1);
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --accent: #334155;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 40px 24px;
+    overflow-x: hidden;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .diagram {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* LOGIN LAYER */
+  .layer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+
+  .login-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .login-box::after {
+    content: '';
+    position: absolute;
+    bottom: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 28px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+  }
+
+  .login-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #fff;
+  }
+
+  .login-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .badge-nextauth {
+    background: rgba(255,255,255,0.05);
+    color: #94a3b8;
+    border: 1px solid var(--border);
+  }
+
+  /* ARROW DOWN */
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 44px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .arrow-down::before {
+    content: '';
+    width: 2px;
+    flex: 1;
+    background: var(--border);
+  }
+
+  .arrow-down::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--border);
+  }
+
+  /* ROLE DETECTION */
+  .role-detect {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 28px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .role-detect-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .role-detect-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--clinician);
+    background: rgba(0,212,255,0.05);
+    padding: 6px 12px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  /* FORK */
+  .fork-label {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .fork-label span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* USER COLUMNS */
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .user-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* USER CARD */
+  .user-card {
+    width: 100%;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    border: 1px solid transparent;
+  }
+
+  .user-card.clinician {
+    background: var(--clinician-dim);
+    border-color: rgba(0, 212, 255, 0.25);
+  }
+
+  .user-card.patient {
+    background: var(--patient-dim);
+    border-color: rgba(124, 58, 237, 0.25);
+  }
+
+  .user-card.admin {
+    background: var(--admin-dim);
+    border-color: rgba(16, 185, 129, 0.25);
+  }
+
+  .user-icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .user-role {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .clinician .user-role { color: var(--clinician); }
+  .patient .user-role { color: var(--patient); }
+  .admin .user-role { color: var(--admin); }
+
+  .user-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* SMALL ARROW */
+  .small-arrow {
+    width: 2px;
+    height: 20px;
+    margin: 0 auto 4px;
+    position: relative;
+  }
+
+  .small-arrow.cl { background: var(--clinician); }
+  .small-arrow.pt { background: var(--patient); }
+  .small-arrow.ad { background: var(--admin); }
+
+  .small-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+  }
+
+  .small-arrow.cl::after { border-top: 6px solid var(--clinician); }
+  .small-arrow.pt::after { border-top: 6px solid var(--patient); }
+  .small-arrow.ad::after { border-top: 6px solid var(--admin); }
+
+  /* CONTEXT WINDOW */
+  .context-window {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    margin-top: 12px;
+  }
+
+  .context-window.clinician { border-color: rgba(0,212,255,0.3); }
+  .context-window.patient { border-color: rgba(124,58,237,0.3); }
+  .context-window.admin { border-color: rgba(16,185,129,0.3); }
+
+  .cw-header {
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .clinician .cw-header { background: rgba(0,212,255,0.15); color: var(--clinician); }
+  .patient .cw-header { background: rgba(124,58,237,0.15); color: var(--patient); }
+  .admin .cw-header { background: rgba(16,185,129,0.15); color: var(--admin); }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .clinician .dot { background: var(--clinician); }
+  .patient .dot { background: var(--patient); }
+  .admin .dot { background: var(--admin); }
+
+  .cw-section {
+    padding: 8px 12px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .cw-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    color: var(--muted);
+  }
+
+  .cw-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 3px 6px;
+    border-radius: 3px;
+    margin-bottom: 3px;
+    display: block;
+  }
+
+  .clinician .cw-item { background: rgba(0,212,255,0.06); color: rgba(0,212,255,0.85); }
+  .patient .cw-item { background: rgba(124,58,237,0.06); color: rgba(167,139,250,0.85); }
+  .admin .cw-item { background: rgba(16,185,129,0.06); color: rgba(16,185,129,0.85); }
+
+  .cw-grow {
+    padding: 8px 12px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .grow-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .grow-bar {
+    height: 4px;
+    border-radius: 2px;
+    margin-bottom: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .grow-fill {
+    height: 100%;
+    border-radius: 2px;
+    animation: pulse-width 2s ease-in-out infinite;
+  }
+
+  .clinician .grow-fill { background: var(--clinician); width: 65%; }
+  .patient .grow-fill { background: var(--patient); width: 35%; }
+  .admin .grow-fill { background: var(--admin); width: 50%; }
+
+  @keyframes pulse-width {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .grow-items {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .grow-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    padding: 2px 5px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.04);
+    color: var(--muted);
+  }
+
+  /* MERGE ARROW */
+  .merge-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .merge-line {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 0;
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .merge-branch {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .merge-v {
+    width: 2px;
+    height: 24px;
+  }
+
+  .merge-h {
+    height: 2px;
+    width: 100%;
+  }
+
+  .merge-branch:first-child .merge-h { border-radius: 0 0 0 4px; }
+  .merge-branch:last-child .merge-h { border-radius: 0 0 4px 0; }
+
+  .merge-branch.cl .merge-v, .merge-branch.cl .merge-h { background: var(--clinician); }
+  .merge-branch.pt .merge-v, .merge-branch.pt .merge-h { background: var(--patient); }
+  .merge-branch.ad .merge-v, .merge-branch.ad .merge-h { background: var(--admin); }
+
+  .merge-center {
+    width: 2px;
+    height: 32px;
+    background: linear-gradient(to bottom, #ffffff40, var(--claude));
+    margin: 0 auto;
+  }
+
+  .merge-arrow-tip {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--claude);
+    margin: 0 auto 12px;
+  }
+
+  /* CLAUDE ENGINE */
+  .claude-engine {
+    background: var(--claude-dim);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 12px;
+    padding: 20px 28px;
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto 8px;
+    position: relative;
+  }
+
+  .claude-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--claude);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .claude-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .claude-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .claude-tags {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .claude-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: rgba(245,158,11,0.1);
+    color: rgba(245,158,11,0.8);
+    border: 1px solid rgba(245,158,11,0.15);
+  }
+
+  /* KEY INSIGHT BOX */
+  .insight {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--claude);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    max-width: 1000px;
+    margin: 0 auto 32px;
+  }
+
+  .insight-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--claude);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 8px;
+  }
+
+  .insight-text {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .insight-text strong { color: var(--text); }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .separator {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ISOLATION CALLOUT */
+  .isolation-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    max-width: 1000px;
+    margin: 0 auto 32px;
+  }
+
+  .isolation-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .isolation-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .isolation-card:nth-child(1) .isolation-title { color: var(--clinician); }
+  .isolation-card:nth-child(2) .isolation-title { color: var(--patient); }
+  .isolation-card:nth-child(3) .isolation-title { color: var(--admin); }
+
+  .isolation-item {
+    font-size: 11px;
+    color: var(--muted);
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .isolation-item:last-child { border-bottom: none; }
+
+  .check { color: #10b981; font-size: 10px; }
+  .cross { color: #ef4444; font-size: 10px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>MindBridge Context Window Architecture</h1>
+  <p>Role-Based Context Injection — Per Session, Per User</p>
+</div>
+
+<div class="diagram">
+
+  <!-- LAYER 1: LOGIN -->
+  <div class="layer-label">① Authentication Layer</div>
+  <div class="login-box">
+    <div>
+      <div class="login-title">NextAuth.js Login</div>
+      <div class="login-sub">mindbridge-health.vercel.app/login</div>
+    </div>
+    <span class="badge badge-nextauth">NextAuth.js + JWT</span>
+  </div>
+
+  <div class="arrow-down"></div>
+  <div style="height:8px"></div>
+
+  <!-- LAYER 2: ROLE DETECTION -->
+  <div class="layer-label">② Role Detection (JWT Payload)</div>
+  <div class="role-detect">
+    <div class="role-detect-title">Who just logged in?</div>
+    <code class="role-detect-code">{ user_id, role: "clinician" | "patient" | "admin", permissions[] }</code>
+  </div>
+
+  <div style="height: 8px"></div>
+  <div class="arrow-down"></div>
+  <div style="height: 8px"></div>
+
+  <!-- FORK LABEL -->
+  <div class="fork-label">
+    <span>③ Separate context windows instantiated per user session</span>
+  </div>
+
+  <!-- LAYER 3: THREE PARALLEL WINDOWS -->
+  <div class="columns">
+
+    <!-- CLINICIAN -->
+    <div class="user-col">
+      <div class="user-card clinician">
+        <div class="user-icon">👩‍⚕️</div>
+        <div class="user-role">CLINICIAN</div>
+        <div class="user-name">Dr. Sarah Mitchell</div>
+      </div>
+      <div class="small-arrow cl"></div>
+      <div style="height:10px"></div>
+      <div class="context-window clinician">
+        <div class="cw-header"><div class="dot"></div> CONTEXT WINDOW A</div>
+        <div class="cw-section">
+          <div class="cw-section-label">System Prompt Injection</div>
+          <span class="cw-item">You are a clinical AI assistant</span>
+          <span class="cw-item">Access: all patient records</span>
+          <span class="cw-item">PHI disclosure: permitted</span>
+          <span class="cw-item">Cite DSM-5 / ICD-10 codes</span>
+          <span class="cw-item">Risk scores: visible</span>
+        </div>
+        <div class="cw-section">
+          <div class="cw-section-label">RAG — Injected Resources</div>
+          <span class="cw-item">Patient: Marcus Thompson</span>
+          <span class="cw-item">Risk Score: HIGH (PHQ-9: 18)</span>
+          <span class="cw-item">Last session: Feb 18, 2026</span>
+          <span class="cw-item">Active medications: Sertraline</span>
+        </div>
+        <div class="cw-grow">
+          <div class="grow-label">Growing (msgs + tool calls)</div>
+          <div class="grow-bar"><div class="grow-fill"></div></div>
+          <div class="grow-items">
+            <span class="grow-tag">user msgs</span>
+            <span class="grow-tag">AI replies</span>
+            <span class="grow-tag">tool results</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PATIENT -->
+    <div class="user-col">
+      <div class="user-card patient">
+        <div class="user-icon">🧑‍💼</div>
+        <div class="user-role">PATIENT</div>
+        <div class="user-name">Marcus Thompson</div>
+      </div>
+      <div class="small-arrow pt"></div>
+      <div style="height:10px"></div>
+      <div class="context-window patient">
+        <div class="cw-header"><div class="dot"></div> CONTEXT WINDOW B</div>
+        <div class="cw-section">
+          <div class="cw-section-label">System Prompt Injection</div>
+          <span class="cw-item">You are a wellness support AI</span>
+          <span class="cw-item">Access: own records only</span>
+          <span class="cw-item">PHI: consumer-safe language</span>
+          <span class="cw-item">No raw scores visible</span>
+          <span class="cw-item">Crisis line always available</span>
+        </div>
+        <div class="cw-section">
+          <div class="cw-section-label">RAG — Injected Resources</div>
+          <span class="cw-item">Your next appt: Feb 25</span>
+          <span class="cw-item">Wellness check-in: pending</span>
+          <span class="cw-item">Mood log: last 7 days</span>
+        </div>
+        <div class="cw-grow">
+          <div class="grow-label">Growing (msgs + tool calls)</div>
+          <div class="grow-bar"><div class="grow-fill"></div></div>
+          <div class="grow-items">
+            <span class="grow-tag">user msgs</span>
+            <span class="grow-tag">AI replies</span>
+            <span class="grow-tag">tool results</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="user-col">
+      <div class="user-card admin">
+        <div class="user-icon">🛡️</div>
+        <div class="user-role">ADMIN</div>
+        <div class="user-name">Janet Williams</div>
+      </div>
+      <div class="small-arrow ad"></div>
+      <div style="height:10px"></div>
+      <div class="context-window admin">
+        <div class="cw-header"><div class="dot"></div> CONTEXT WINDOW C</div>
+        <div class="cw-section">
+          <div class="cw-section-label">System Prompt Injection</div>
+          <span class="cw-item">You are a system admin AI</span>
+          <span class="cw-item">Access: audit logs & metrics</span>
+          <span class="cw-item">PHI: de-identified only</span>
+          <span class="cw-item">User management: enabled</span>
+          <span class="cw-item">Compliance reports: full</span>
+        </div>
+        <div class="cw-section">
+          <div class="cw-section-label">RAG — Injected Resources</div>
+          <span class="cw-item">Active sessions: 12</span>
+          <span class="cw-item">HIPAA audit: 3 flags</span>
+          <span class="cw-item">DB health: nominal</span>
+        </div>
+        <div class="cw-grow">
+          <div class="grow-label">Growing (msgs + tool calls)</div>
+          <div class="grow-bar"><div class="grow-fill"></div></div>
+          <div class="grow-items">
+            <span class="grow-tag">user msgs</span>
+            <span class="grow-tag">AI replies</span>
+            <span class="grow-tag">tool results</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MERGE INTO CLAUDE -->
+  <div class="layer-label" style="text-align:center">④ All windows route to the same Claude API — isolated from each other</div>
+  <div class="merge-section">
+    <div class="merge-line">
+      <div class="merge-branch cl">
+        <div class="merge-v"></div>
+        <div class="merge-h"></div>
+      </div>
+      <div class="merge-branch pt">
+        <div class="merge-v"></div>
+        <div class="merge-h" style="opacity:0"></div>
+      </div>
+      <div class="merge-branch ad">
+        <div class="merge-v"></div>
+        <div class="merge-h" style="transform: scaleX(-1)"></div>
+      </div>
+    </div>
+    <div class="merge-center"></div>
+    <div class="merge-arrow-tip"></div>
+  </div>
+
+  <div class="claude-engine">
+    <div class="claude-label">⚡ AI Engine</div>
+    <div class="claude-title">Claude API</div>
+    <div class="claude-sub">claude-sonnet-4-6 · Anthropic</div>
+    <div class="claude-tags">
+      <span class="claude-tag">stateless</span>
+      <span class="claude-tag">no cross-session memory</span>
+      <span class="claude-tag">context = everything</span>
+    </div>
+  </div>
+
+  <hr class="separator">
+
+  <!-- INSIGHT BOX -->
+  <div class="insight">
+    <div class="insight-title">⚡ The Core Insight</div>
+    <div class="insight-text">
+      Claude itself has <strong>no memory between sessions</strong>. It is stateless. It only knows what you put in the context window right now. This means <strong>every behavior difference between a clinician and a patient</strong> — the tone, what data is visible, what actions are allowed — is entirely a result of what your backend injects at session start. <strong>Context engineering is access control.</strong> In healthcare, this is also HIPAA compliance.
+    </div>
+  </div>
+
+  <!-- ISOLATION TABLE -->
+  <div class="layer-label" style="text-align:center; max-width:1000px; margin: 0 auto 16px;">⑤ What each role can see — enforced at the context layer</div>
+  <div class="isolation-row">
+    <div class="isolation-card">
+      <div class="isolation-title">👩‍⚕️ Clinician Window</div>
+      <div class="isolation-item">All patient PHI <span class="check">✓</span></div>
+      <div class="isolation-item">Risk scores (raw) <span class="check">✓</span></div>
+      <div class="isolation-item">Medication history <span class="check">✓</span></div>
+      <div class="isolation-item">Other patients' data <span class="cross">✗</span></div>
+      <div class="isolation-item">Admin/system logs <span class="cross">✗</span></div>
+    </div>
+    <div class="isolation-card">
+      <div class="isolation-title">🧑‍💼 Patient Window</div>
+      <div class="isolation-item">Own appointment data <span class="check">✓</span></div>
+      <div class="isolation-item">Wellness check-ins <span class="check">✓</span></div>
+      <div class="isolation-item">Raw PHQ-9 scores <span class="cross">✗</span></div>
+      <div class="isolation-item">Other patients' data <span class="cross">✗</span></div>
+      <div class="isolation-item">Clinical notes (raw) <span class="cross">✗</span></div>
+    </div>
+    <div class="isolation-card">
+      <div class="isolation-title">🛡️ Admin Window</div>
+      <div class="isolation-item">De-identified metrics <span class="check">✓</span></div>
+      <div class="isolation-item">HIPAA audit logs <span class="check">✓</span></div>
+      <div class="isolation-item">User management <span class="check">✓</span></div>
+      <div class="isolation-item">Individual PHI <span class="cross">✗</span></div>
+      <div class="isolation-item">Clinical decisions <span class="cross">✗</span></div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--clinician)"></div>Clinician Session</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--patient)"></div>Patient Session</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--admin)"></div>Admin Session</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--claude)"></div>Claude API Engine</div>
+  </div>
+
+</div>
+</body>
+</html>

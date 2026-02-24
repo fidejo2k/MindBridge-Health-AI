@@ -8,7 +8,8 @@ from datetime import datetime
 import os
 
 # Your Railway DATABASE_PUBLIC_URL
-DATABASE_PUBLIC_URL = "postgresql://postgres:HwxNFHyakpIoPXoMefNdsOTLwIwMJlfP@switchback.proxy.rlwy.net:56330/railway"
+import os
+DATABASE_PUBLIC_URL = os.environ.get("DATABASE_PUBLIC_URL")
 
 def generate_railway_report():
     """Generate comprehensive risk assessment report from Railway."""

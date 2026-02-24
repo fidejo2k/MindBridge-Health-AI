@@ -8,7 +8,8 @@ from datetime import datetime
 
 # Copy your DATABASE_PUBLIC_URL from Railway
 # Click the eye icon next to DATABASE_PUBLIC_URL and paste the ENTIRE string here
-DATABASE_PUBLIC_URL = "postgresql://postgres:HwxNFHyakpIoPXoMefNdsOTLwIwMJlfP@switchback.proxy.rlwy.net:56330/railway"
+import os
+DATABASE_PUBLIC_URL = os.environ.get("DATABASE_PUBLIC_URL")
 
 # Example of what it looks like (yours will be different):
 # postgresql://postgres:AbCd1234XyZ@monorail.proxy.rlwy.net:12345/railway

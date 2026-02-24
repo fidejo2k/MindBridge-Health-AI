@@ -8,7 +8,8 @@ from datetime import datetime
 
 # Your Railway DATABASE_PUBLIC_URL
 # (Same one you used in test_railway_simple.py)
-DATABASE_PUBLIC_URL = "postgresql://postgres:HwxNFHyakpIoPXoMefNdsOTLwIwMJlfP@switchback.proxy.rlwy.net:56330/railway"
+import os
+DATABASE_PUBLIC_URL = os.environ.get("DATABASE_PUBLIC_URL")
 
 def setup_mindbridge_database():
     """Create MindBridge schema and insert sample patients."""

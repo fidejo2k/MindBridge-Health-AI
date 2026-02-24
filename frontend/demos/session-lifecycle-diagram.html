@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindBridge Session Lifecycle</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #060912;
+    --surface: #0d1526;
+    --surface2: #111e35;
+    --border: #1a2840;
+    --border2: #243655;
+    --login: #38bdf8;
+    --active: #a78bfa;
+    --compress: #fb923c;
+    --store: #34d399;
+    --reconstruct: #f472b6;
+    --logout: #94a3b8;
+    --claude: #fbbf24;
+    --text: #e2e8f0;
+    --muted: #4a6080;
+    --muted2: #64748b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 48px 24px 64px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted2);
+    margin-bottom: 12px;
+  }
+
+  .header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--muted2);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  /* SESSION BLOCK */
+  .session-block {
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .session-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0;
+  }
+
+  .session-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .session-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border2);
+  }
+
+  .session-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* EVENT TIMELINE */
+  .timeline {
+    position: relative;
+    padding: 20px 0 0 0;
+    margin-bottom: 0;
+  }
+
+  /* Vertical connecting line */
+  .timeline-track {
+    position: absolute;
+    left: 20px;
+    top: 28px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--border2) 0%, transparent 100%);
+  }
+
+  .event {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .event-node {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .event-body {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    position: relative;
+  }
+
+  .event-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .event-desc {
+    font-size: 12px;
+    color: var(--muted2);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  /* CODE SNIPPETS */
+  .code-block {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+
+  .code-comment { color: #3d5270; }
+  .code-key { color: #7dd3fc; }
+  .code-val { color: #86efac; }
+  .code-str { color: #fda4af; }
+  .code-op { color: #94a3b8; }
+  .code-fn { color: #c084fc; }
+  .code-kw { color: #fbbf24; }
+
+  /* MESSAGE BUBBLES */
+  .messages {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .msg {
+    padding: 7px 11px;
+    border-radius: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    max-width: 90%;
+  }
+
+  .msg-user {
+    background: rgba(167,139,250,0.1);
+    border: 1px solid rgba(167,139,250,0.2);
+    color: #c4b5fd;
+    align-self: flex-end;
+  }
+
+  .msg-ai {
+    background: rgba(251,191,36,0.08);
+    border: 1px solid rgba(251,191,36,0.15);
+    color: #fcd34d;
+    align-self: flex-start;
+  }
+
+  .msg-tool {
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.15);
+    color: #6ee7b7;
+    align-self: flex-start;
+    font-size: 9px;
+  }
+
+  /* TOKEN METER */
+  .token-meter {
+    margin-top: 8px;
+  }
+
+  .token-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .token-label span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted2);
+  }
+
+  .token-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .token-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+
+  /* COMPRESSION VISUAL */
+  .compress-visual {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .compress-before {
+    flex: 1;
+  }
+
+  .compress-arrow {
+    font-size: 18px;
+    color: var(--compress);
+    flex-shrink: 0;
+  }
+
+  .compress-after {
+    flex: 1;
+  }
+
+  .compress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .compress-box {
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    line-height: 1.5;
+  }
+
+  .compress-box.before {
+    background: rgba(167,139,250,0.06);
+    border: 1px solid rgba(167,139,250,0.15);
+    color: #a78bfa;
+  }
+
+  .compress-box.after {
+    background: rgba(251,146,60,0.06);
+    border: 1px solid rgba(251,146,60,0.2);
+    color: #fdba74;
+  }
+
+  .compress-stats {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .stat-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    padding: 2px 7px;
+    border-radius: 3px;
+  }
+
+  /* DB TABLE */
+  .db-table {
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+  }
+
+  .db-thead {
+    background: var(--surface2);
+    padding: 6px 10px;
+    color: var(--muted2);
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1.5fr 0.8fr 0.8fr;
+    gap: 8px;
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .db-row {
+    padding: 6px 10px;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1.5fr 0.8fr 0.8fr;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+
+  .db-row:last-child { border-bottom: none; }
+
+  .db-row.highlight { background: rgba(52,211,153,0.04); }
+
+  .db-id { color: #60a5fa; }
+  .db-role { color: #c084fc; }
+  .db-content { color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .db-tokens { color: var(--compress); }
+  .db-type { }
+
+  .type-badge {
+    font-size: 8px;
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+
+  .type-user { background: rgba(167,139,250,0.15); color: #c4b5fd; }
+  .type-ai { background: rgba(251,191,36,0.1); color: #fcd34d; }
+  .type-tool { background: rgba(52,211,153,0.1); color: #6ee7b7; }
+  .type-summary { background: rgba(251,146,60,0.15); color: #fdba74; }
+
+  /* RECONSTRUCTION VISUAL */
+  .reconstruct-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .r-layer {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid transparent;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+  }
+
+  .r-layer.sys {
+    background: rgba(56,189,248,0.07);
+    border-color: var(--login);
+    color: #7dd3fc;
+  }
+
+  .r-layer.rag {
+    background: rgba(52,211,153,0.07);
+    border-color: var(--store);
+    color: #6ee7b7;
+  }
+
+  .r-layer.summary {
+    background: rgba(251,146,60,0.07);
+    border-color: var(--compress);
+    color: #fdba74;
+  }
+
+  .r-layer.recent {
+    background: rgba(167,139,250,0.07);
+    border-color: var(--active);
+    color: #c4b5fd;
+  }
+
+  .r-layer-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 2px;
+  }
+
+  /* BETWEEN SESSION CONNECTOR */
+  .between-sessions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    margin: 8px 0;
+    background: rgba(0,0,0,0.3);
+    border: 1px dashed var(--border2);
+    border-radius: 10px;
+  }
+
+  .between-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .between-text {
+    flex: 1;
+  }
+
+  .between-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted2);
+    margin-bottom: 3px;
+  }
+
+  .between-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .between-store {
+    display: flex;
+    gap: 6px;
+  }
+
+  .store-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.2);
+    color: #6ee7b7;
+  }
+
+  /* HIPAA BADGE */
+  .hipaa-strip {
+    background: rgba(239,68,68,0.06);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hipaa-icon { font-size: 16px; }
+
+  .hipaa-text {
+    font-size: 11px;
+    color: #fca5a5;
+    line-height: 1.5;
+  }
+
+  .hipaa-text strong { color: #f87171; }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* COLOR ASSIGNMENTS */
+  .ev-login .event-node { background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.25); }
+  .ev-active .event-node { background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.25); }
+  .ev-grow .event-node { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2); }
+  .ev-compress .event-node { background: rgba(251,146,60,0.12); border: 1px solid rgba(251,146,60,0.25); }
+  .ev-store .event-node { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.2); }
+  .ev-logout .event-node { background: rgba(148,163,184,0.1); border: 1px solid rgba(148,163,184,0.2); }
+  .ev-reconstruct .event-node { background: rgba(244,114,182,0.1); border: 1px solid rgba(244,114,182,0.2); }
+
+  .ev-login .event-body { border-color: rgba(56,189,248,0.2); }
+  .ev-active .event-body { border-color: rgba(167,139,250,0.2); }
+  .ev-grow .event-body { border-color: rgba(251,191,36,0.15); }
+  .ev-compress .event-body { border-color: rgba(251,146,60,0.2); }
+  .ev-store .event-body { border-color: rgba(52,211,153,0.15); }
+  .ev-logout .event-body { border-color: rgba(148,163,184,0.15); }
+  .ev-reconstruct .event-body { border-color: rgba(244,114,182,0.2); }
+
+  .ev-login .event-title { color: var(--login); }
+  .ev-active .event-title { color: var(--active); }
+  .ev-grow .event-title { color: var(--claude); }
+  .ev-compress .event-title { color: var(--compress); }
+  .ev-store .event-title { color: var(--store); }
+  .ev-logout .event-title { color: var(--logout); }
+  .ev-reconstruct .event-title { color: var(--reconstruct); }
+
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.06);
+    color: var(--muted2);
+  }
+
+  /* FINAL SUMMARY */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 40px;
+  }
+
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .summary-card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .summary-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 7px;
+    font-size: 11px;
+    color: var(--muted2);
+    line-height: 1.4;
+  }
+
+  .summary-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Context Engineering · MindBridge Health AI</div>
+  <h1>Session Lifecycle Diagram</h1>
+  <p>How a clinical conversation is born, grows, compressed, stored, and reconstructed across multiple logins</p>
+</div>
+
+<div class="main">
+
+  <!-- ============================== SESSION 1 ============================== -->
+  <div class="session-block">
+    <div class="session-header">
+      <span class="session-pill" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;">Session 1</span>
+      <div class="session-line"></div>
+      <span class="session-meta">Feb 24, 2026 · 09:14 AM — Dr. Sarah Mitchell</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-track"></div>
+
+      <!-- EVENT: LOGIN -->
+      <div class="event ev-login">
+        <div class="event-node">🔑</div>
+        <div class="event-body">
+          <div class="event-title"><span class="step-num">STEP 1</span> Authentication + Context Bootstrap</div>
+          <div class="event-desc">User logs in. NextAuth.js validates credentials, mints a JWT. FastAPI reads the JWT, identifies role = "clinician", and assembles the opening context window.</div>
+          <div class="code-block">
+            <span class="code-comment"># FastAPI: build_context_for_session()</span><br>
+            <span class="code-key">system_prompt</span> <span class="code-op">=</span> <span class="code-fn">load_system_prompt</span>(<span class="code-str">"clinician"</span>)<br>
+            <span class="code-key">rag_data</span>     <span class="code-op">=</span> <span class="code-fn">fetch_patient_context</span>(<span class="code-str">patient_id</span>)<br>
+            <span class="code-key">history</span>      <span class="code-op">=</span> []  <span class="code-comment"># fresh window — no prior messages</span><br>
+            <span class="code-key">session_id</span>   <span class="code-op">=</span> <span class="code-fn">create_session</span>(<span class="code-str">user_id, role, timestamp</span>)
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT: ACTIVE CONVERSATION -->
+      <div class="event ev-active">
+        <div class="event-node">💬</div>
+        <div class="event-body">
+          <div class="event-title"><span class="step-num">STEP 2</span> Active Conversation — Window Grows</div>
+          <div class="event-desc">Every exchange adds to the context window. User messages, AI responses, and tool call results all stack up chronologically.</div>
+          <div class="messages">
+            <div class="msg msg-user">What's Marcus Thompson's current risk level?</div>
+            <div class="msg msg-tool">🔧 tool_call: get_patient_risk(patient_id=12) → PHQ-9: 18, GAD-7: 14, RISK: HIGH</div>
+            <div class="msg msg-ai">Marcus is currently HIGH risk. PHQ-9 score of 18 indicates severe depression. Recommend immediate follow-up within 48 hours.</div>
+            <div class="msg msg-user">What medications is he currently on?</div>
+            <div class="msg msg-tool">🔧 tool_call: get_medications(patient_id=12) → Sertraline 100mg, Lorazepam 0.5mg PRN</div>
+            <div class="msg msg-ai">Marcus is on Sertraline 100mg daily and Lorazepam 0.5mg as needed. The PHQ-9 elevation may indicate Sertraline dose adjustment needed.</div>
+          </div>
+          <div class="token-meter">
+            <div class="token-label">
+              <span>Context window usage</span>
+              <span style="color: var(--claude)">~4,200 / 200,000 tokens</span>
+            </div>
+            <div class="token-bar">
+              <div class="token-fill" style="width:2.1%; background: linear-gradient(to right, var(--active), var(--claude));"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT: STORE AFTER EACH MSG -->
+      <div class="event ev-store">
+        <div class="event-node">💾</div>
+        <div class="event-body">
+          <div class="event-title"><span class="step-num">STEP 3</span> PostgreSQL — Every Message Persisted in Real Time</div>
+          <div class="event-desc">Your FastAPI backend writes each message to the <code style="color:#86efac;font-family:JetBrains Mono,monospace;font-size:10px">messages</code> table immediately. Claude holds nothing — your DB holds everything.</div>
+          <div class="db-table">
+            <div class="db-thead">
+              <span>session_id</span><span>role</span><span>content</span><span>tokens</span><span>type</span>
+            </div>
+            <div class="db-row">
+              <span class="db-id">sess_001</span>
+              <span class="db-role">user</span>
+              <span class="db-content">What's Marcus Thompson's risk...</span>
+              <span class="db-tokens">18</span>
+              <span class="type-badge type-user">user</span>
+            </div>
+            <div class="db-row">
+              <span class="db-id">sess_001</span>
+              <span class="db-role">tool</span>
+              <span class="db-content">PHQ-9: 18, GAD-7: 14...</span>
+              <span class="db-tokens">42</span>
+              <span class="type-badge type-tool">tool</span>
+            </div>
+            <div class="db-row highlight">
+              <span class="db-id">sess_001</span>
+              <span class="db-role">assistant</span>
+              <span class="db-content">Marcus is currently HIGH risk...</span>
+              <span class="db-tokens">61</span>
+              <span class="type-badge type-ai">ai</span>
+            </div>
+            <div class="db-row">
+              <span class="db-id">sess_001</span>
+              <span class="db-role">user</span>
+              <span class="db-content">What medications is he on?</span>
+              <span class="db-tokens">12</span>
+              <span class="type-badge type-user">user</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT: LOGOUT -->
+      <div class="event ev-logout">
+        <div class="event-node">🚪</div>
+        <div class="event-body">
+          <div class="event-title"><span class="step-num">STEP 4</span> User Logs Out — Context Window Destroyed</div>
+          <div class="event-desc">Claude's context window is gone the moment the API call ends. The conversation exists only in PostgreSQL now. Claude has zero memory of it.</div>
+          <div class="hipaa-strip">
+            <span class="hipaa-icon">🛡️</span>
+            <div class="hipaa-text">
+              <strong>HIPAA Retention Rule:</strong> Clinical conversations are part of the medical record. Raw messages stored in PostgreSQL for minimum <strong>6 years</strong>. Soft-delete only — <code style="font-family:JetBrains Mono,monospace">deleted_at</code> timestamp, never hard delete.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BETWEEN SESSIONS -->
+  <div class="between-sessions">
+    <span class="between-icon">⏸️</span>
+    <div class="between-text">
+      <div class="between-title">Time passes — user is offline</div>
+      <div class="between-sub">PostgreSQL holds the full conversation. Claude holds nothing. Session is dormant.</div>
+    </div>
+    <div class="between-store">
+      <span class="store-badge">PostgreSQL ✓</span>
+      <span class="store-badge">Claude ✗</span>
+    </div>
+  </div>
+
+  <!-- ============================== SESSION 2 ============================== -->
+  <div class="session-block">
+    <div class="session-header">
+      <span class="session-pill" style="background:rgba(244,114,182,0.12);border:1px solid rgba(244,114,182,0.3);color:#f472b6;">Session 2</span>
+      <div class="session-line"></div>
+      <span class="session-meta">Feb 25, 2026 · 02:30 PM — Dr. Sarah Mitchell returns</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-track"></div>
+
+      <!-- EVENT: RECONSTRUCT -->
+      <div class="event ev-reconstruct">
+        <div class="event-node">🔄</div>
+        <div class="event-body">
+          <div class="event-title"><span class="step-num">STEP 5</span> Context Reconstruction on Login</div>
+          <div class="event-desc">User logs back in. FastAPI queries PostgreSQL for all messages from previous sessions. It rebuilds the context window layer by layer before sending anything to Claude.</div>
+          <div class="reconstruct-layers">
+            <div class="r-layer sys">
+              <div class="r-layer-label">Layer 1 — System Prompt (static, always first)</div>
+              You are a clinical AI assistant for MindBridge Health AI. Role: Clinician. Access: full PHI...
+            </div>
+            <div class="r-layer rag">
+              <div class="r-layer-label">Layer 2 — RAG Injection (fresh fetch from DB)</div>
+              Patient: Marcus Thompson · PHQ-9: 18 · Last visit: Feb 24 · Meds: Sertraline 100mg...
+            </div>
+            <div class="r-layer summary">
+              <div class="r-layer-label">Layer 3 — Compressed Summary (older sessions)</div>
+              [Session 1 Summary] Dr. Mitchell reviewed Marcus Thompson's HIGH risk status (PHQ-9: 18). Discussed Sertraline dose adjustment. Recommended 48hr follow-up.
+            </div>
+            <div class="r-layer recent">
+              <div class="r-layer-label">Layer 4 — Recent Messages (last N messages, full fidelity)</div>
+              [Most recent 10-15 messages loaded verbatim for full accuracy]
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT: CONVERSATION GROWS LONG -->
+      <div class="event ev-grow">
+        <div class="event-node">📈</div>
+        <div class="event-body">
+          <div class="event-title"><span class="step-num">STEP 6</span> Context Window Fills Up — Compression Triggered</div>
+          <div class="event-desc">After many sessions, the raw message history is too large to fit in the context window efficiently. Your backend detects this and triggers the summarization pipeline.</div>
+          <div class="token-meter">
+            <div class="token-label">
+              <span>Context window approaching limit</span>
+              <span style="color: var(--compress)">~172,000 / 200,000 tokens ⚠️</span>
+            </div>
+            <div class="token-bar">
+              <div class="token-fill" style="width:86%; background: linear-gradient(to right, var(--active), var(--compress));"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT: COMPRESSION -->
+      <div class="event ev-compress">
+        <div class="event-node">🗜️</div>
+        <div class="event-body">
+          <div class="event-title"><span class="step-num">STEP 7</span> Summarization Pipeline — Compress Old, Keep Recent</div>
+          <div class="event-desc">FastAPI sends older messages to Claude with a summarization prompt. The summary replaces the raw messages in the context window. Raw messages stay in PostgreSQL forever.</div>
+          <div class="compress-visual">
+            <div class="compress-before">
+              <div class="compress-label">Before compression</div>
+              <div class="compress-box before">
+                msg_001: What is his risk...<br>
+                msg_002: PHQ-9 result: 18...<br>
+                msg_003: Marcus is HIGH risk...<br>
+                msg_004: What meds is he on...<br>
+                msg_005: Sertraline 100mg...<br>
+                <em>...40 more messages</em>
+              </div>
+              <div class="compress-stats">
+                <span class="stat-pill" style="background:rgba(167,139,250,0.1);color:#c4b5fd;border:1px solid rgba(167,139,250,0.2)">~18,400 tokens</span>
+              </div>
+            </div>
+            <div class="compress-arrow">→</div>
+            <div class="compress-after">
+              <div class="compress-label">After compression</div>
+              <div class="compress-box after">
+                [SUMMARY] Dr. Mitchell conducted risk review for Marcus Thompson (PHQ-9: 18, HIGH). Discussed medication adjustment and ordered 48hr follow-up. Patient agreed to daily mood logging.
+              </div>
+              <div class="compress-stats">
+                <span class="stat-pill" style="background:rgba(251,146,60,0.1);color:#fdba74;border:1px solid rgba(251,146,60,0.2)">~62 tokens</span>
+                <span class="stat-pill" style="background:rgba(52,211,153,0.1);color:#6ee7b7;border:1px solid rgba(52,211,153,0.2)">99.7% reduction</span>
+              </div>
+            </div>
+          </div>
+          <div class="code-block" style="margin-top:10px">
+            <span class="code-comment"># PostgreSQL: summary saved alongside raw messages</span><br>
+            <span class="code-kw">INSERT INTO</span> messages (<span class="code-key">session_id, type, content, tokens</span>)<br>
+            <span class="code-kw">VALUES</span> (<span class="code-str">'sess_001'</span>, <span class="code-str">'summary'</span>, <span class="code-str">'[SUMMARY] Dr. Mitchell...'</span>, <span class="code-val">62</span>);<br>
+            <span class="code-comment"># Raw messages untouched — HIPAA compliance preserved</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUMMARY GRID -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-card-title" style="color: var(--store)">🗄️ What PostgreSQL Holds</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--store)"></div>Every raw message, forever</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--store)"></div>Every tool call result</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--store)"></div>Session metadata (start, end, user, role)</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--store)"></div>Compressed summaries</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--store)"></div>Audit log of all data access</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-title" style="color: var(--claude)">⚡ What Claude Receives</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--claude)"></div>System prompt (role-injected)</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--claude)"></div>Fresh RAG data (current patient state)</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--claude)"></div>Compressed summary of old sessions</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--claude)"></div>Last 10-15 messages verbatim</div>
+      <div class="summary-item"><div class="summary-dot" style="background:var(--claude)"></div>Nothing else — ever</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-title" style="color: #ef4444">🛡️ HIPAA Rules Applied</div>
+      <div class="summary-item"><div class="summary-dot" style="background:#ef4444"></div>No hard deletes — soft delete only</div>
+      <div class="summary-item"><div class="summary-dot" style="background:#ef4444"></div>6-year minimum retention</div>
+      <div class="summary-item"><div class="summary-dot" style="background:#ef4444"></div>Encryption at rest (AES-256)</div>
+      <div class="summary-item"><div class="summary-dot" style="background:#ef4444"></div>Audit log on every query</div>
+      <div class="summary-item"><div class="summary-dot" style="background:#ef4444"></div>Role-based access at DB layer</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
