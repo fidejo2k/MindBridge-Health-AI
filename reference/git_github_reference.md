@@ -739,3 +739,16 @@ git push
 
 Note that GitHub message — your repo moved to fidelis-emmanuel/MindBridge-Health-AI. Update your remote so future pushes go to the right place:
 bashgit remote set-url origin https://github.com/fidelis-emmanuel/MindBridge-Health-AI.git
+
+
+One final step — clean the git history so the old password can't be found in old commits:
+bashcd "E:\MindBridge Health care"
+pip install git-filter-repo --break-system-packages
+git filter-repo --path scripts/generate_railway_report.py --invert-paths
+git filter-repo --path scripts/setup_railway_mindbridge.py --invert-paths  
+git filter-repo --path scripts/test_railway_connection.py --invert-paths
+git remote add origin https://github.com/fidelis-emmanuel/MindBridge-Health-AI.git
+git push origin main --force
+Interview gold from this experience:
+When an interviewer asks "tell me about a security incident you handled" — you now have a real answer. You detected exposed credentials, rotated them immediately, removed them from code, cleaned git history, and implemented proper environment variable patterns. That's textbook incident response.
+Run those commands and we're completely clean. 🔧
