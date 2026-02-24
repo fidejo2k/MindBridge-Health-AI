@@ -1,11 +1,20 @@
+import { Pool } from "pg";
 import Link from "next/link";
 
 async function getPatients() {
-  const res = await fetch("http://localhost:3000/api/patients", {
-    cache: "no-store",
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
   });
-  const data = await res.json();
-  return data.patients;
+  
+  const result = await pool.query(`
+    SELECT id, patient_name, risk_level, medication_adherence, 
+           appointments_missed, crisis_calls_30days, diagnosis
+    FROM patients ORDER BY id ASC
+  `);
+  
+  await pool.end();
+  return result.rows;
 }
 
 function RiskBadge({ risk }: { risk: string }) {
