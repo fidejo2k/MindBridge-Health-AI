@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { Pool } from "pg";
 import Link from "next/link";
 

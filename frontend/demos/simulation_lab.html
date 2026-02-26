@@ -365,7 +365,7 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-section">
-      <div class="sidebar-title">🎭 Simulations (16)</div>
+      <div class="sidebar-title">🎭 Simulations (19)</div>
       <button class="scenario-btn" onclick="loadScenario('login')" id="btn-login">
         <span class="icon">🔐</span>
         <span class="info">
@@ -492,10 +492,31 @@
           <div class="tag tag-sim">Simulation</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('railway_deploy_fail')" id="btn-railway_deploy_fail">
+        <span class="icon">🚂</span>
+        <span class="info">
+          <div class="name">Railway Deployment Fails</div>
+          <div class="tag tag-sim">Simulation</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('db_unavailable')" id="btn-db_unavailable">
+        <span class="icon">💾</span>
+        <span class="info">
+          <div class="name">Database Unavailable on Startup</div>
+          <div class="tag tag-sim">Simulation</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('cors_blocked')" id="btn-cors_blocked">
+        <span class="icon">🚫</span>
+        <span class="info">
+          <div class="name">CORS Blocking API Calls</div>
+          <div class="tag tag-sim">Simulation</div>
+        </span>
+      </button>
     </div>
 
     <div class="sidebar-section">
-      <div class="sidebar-title">🎤 Interview Practice (16)</div>
+      <div class="sidebar-title">🎤 Interview Practice (18)</div>
       <button class="scenario-btn" onclick="loadScenario('whyhire')" id="btn-whyhire">
         <span class="icon">💼</span>
         <span class="info">
@@ -615,10 +636,24 @@
           <div class="tag tag-int">Interview</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('fastapi_deploy_interview')" id="btn-fastapi_deploy_interview">
+        <span class="icon">🚀</span>
+        <span class="info">
+          <div class="name">Walk Me Through Your Deployment</div>
+          <div class="tag tag-int">Interview</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('async_vs_sync')" id="btn-async_vs_sync">
+        <span class="icon">⚡</span>
+        <span class="info">
+          <div class="name">Async vs Sync Database Calls</div>
+          <div class="tag tag-int">Interview</div>
+        </span>
+      </button>
     </div>
 
     <div class="sidebar-section">
-      <div class="sidebar-title">💡 Concept Check (12)</div>
+      <div class="sidebar-title">💡 Concept Check (14)</div>
       <button class="scenario-btn" onclick="loadScenario('docker')" id="btn-docker">
         <span class="icon">🐳</span>
         <span class="info">
@@ -710,6 +745,20 @@
           <div class="tag tag-con">Concept</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('connection_pooling_deep')" id="btn-connection_pooling_deep">
+        <span class="icon">🔌</span>
+        <span class="info">
+          <div class="name">Connection Pooling Deep Dive</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('railway_env_vars')" id="btn-railway_env_vars">
+        <span class="icon">🔑</span>
+        <span class="info">
+          <div class="name">Railway Environment Variables</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
     </div>
   </div>
 
@@ -721,22 +770,22 @@
       <div class="welcome" id="welcome">
         <div style="font-size:48px">🏥</div>
         <h2>Welcome to Simulation Lab</h2>
-        <p>Practice real scenarios you'll face in Healthcare AI Engineer interviews. 30 scenarios covering simulations, interviews, and technical concepts.</p>
+        <p>Practice real scenarios you'll face in Healthcare AI Engineer interviews. 55 scenarios covering simulations, interviews, and technical concepts.</p>
         <div class="welcome-cards">
           <div class="welcome-card">
             <div class="icon">🎭</div>
             <div class="title">Simulations</div>
-            <div class="desc">16 real-world system scenarios including deployment and incident response</div>
+            <div class="desc">19 real-world system scenarios including deployment and incident response</div>
           </div>
           <div class="welcome-card">
             <div class="icon">🎤</div>
             <div class="title">Interview</div>
-            <div class="desc">16 interview scenarios including healthcare-specific design challenges</div>
+            <div class="desc">18 interview scenarios including healthcare-specific design challenges</div>
           </div>
           <div class="welcome-card">
             <div class="icon">💡</div>
             <div class="title">Concepts</div>
-            <div class="desc">12 deep-dive technical concepts: Docker, PostgreSQL, HIPAA, FHIR, HL7, Pooling</div>
+            <div class="desc">14 deep-dive technical concepts: Docker, PostgreSQL, HIPAA, FHIR, HL7, Pooling</div>
           </div>
         </div>
       </div>
@@ -2532,6 +2581,246 @@ When session expires and they log back in: "You have an unsaved draft from 2:47 
 <strong>The HIPAA balance:</strong><br>
 The 8-hour timeout is non-negotiable — it's a regulatory requirement. But how the application handles the expiry IS negotiable. A good healthcare app warns before expiry, saves drafts, and restores work after re-authentication. The security requirement and the clinical UX don't have to conflict.<br><br>
 <strong>Interview gold:</strong> "Security requirements and user experience don't have to conflict. The session timeout is HIPAA-mandated. But auto-save, expiry warnings, and draft restoration make the timeout invisible to case managers 99% of the time. That's clinical-aware engineering."`
+  },
+
+  railway_deploy_fail: {
+    type: "simulation",
+    title: "Railway Deployment Fails — No Start Command",
+    question: "You push your FastAPI backend to Railway and the deployment fails with: 'No start command was found.' The logs show Railpack detected Python but couldn't find how to start the app. How do you diagnose and fix this?",
+    context: "Deployment failures on Railway are common when deploying from subdirectories. Show you understand how Railway's build system works.",
+    ideal: `<strong>WHAT HAPPENED:</strong><br>
+Railway's Railpack build system scanned the repository root and couldn't find a recognizable Python app entry point. The FastAPI app is in the backend/ subdirectory, so Railpack couldn't detect it automatically.<br><br>
+<strong>DIAGNOSIS STEPS:</strong><br>
+1. Check if Root Directory is set correctly in Railway Settings → Source → Root Directory<br>
+Should be: backend<br>
+If empty, Railway scans the entire repo and gets confused<br><br>
+2. Check if railway.toml exists in the backend/ folder<br>
+The startCommand in railway.toml should override Railpack's detection<br><br>
+3. Check if the start command is set manually in Settings → Deploy → Start Command<br><br>
+<strong>FIX OPTIONS (in order of preference):</strong><br><br>
+Option 1 — Set Root Directory:<br>
+Railway Settings → Source → Add Root Directory → type "backend"<br>
+Railpack now scans only the backend/ folder and finds main.py<br><br>
+Option 2 — Set Start Command manually:<br>
+Railway Settings → Deploy → Start Command:<br>
+uvicorn app.main:app --host 0.0.0.0 --port $PORT<br><br>
+Option 3 — Add railway.toml to backend/:<br>
+[deploy]<br>
+startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"<br><br>
+<strong>ROOT CAUSE LESSON:</strong><br>
+Railway expects apps at the repo root by default. Monorepos (frontend + backend in same repo) always need explicit Root Directory configuration. This is a one-time setup per service.<br><br>
+<strong>Interview gold:</strong> "Railway's Nixpacks is powerful but opinionated. When deploying from subdirectories, always set Root Directory explicitly. I learned this the hard way and now it's the first thing I configure for any new Railway service."`
+  },
+
+  db_unavailable: {
+    type: "simulation",
+    title: "Database Unavailable on Startup — Healthcheck Fails",
+    question: "Your FastAPI service deploys to Railway but the healthcheck fails. Logs show the database pool creation throws an error during lifespan startup, crashing the app before it can respond to /health. How do you fix this without compromising database connectivity?",
+    context: "This is a real production issue. Healthchecks and database connectivity need to be decoupled. Show you understand graceful degradation.",
+    ideal: `<strong>WHAT HAPPENED:</strong><br>
+The lifespan function tried to create the asyncpg pool during startup. The database was temporarily unavailable (wrong URL, network issue, DB restarting). The exception propagated and crashed the entire FastAPI startup — the app never started, so /health never responded, so Railway marked the deployment as failed.<br><br>
+<strong>THE WRONG APPROACH:</strong><br>
+@asynccontextmanager<br>
+async def lifespan(app):<br>
+    db_pool = await asyncpg.create_pool(DATABASE_URL)  # Crashes if DB unavailable<br>
+    yield<br><br>
+<strong>THE RIGHT APPROACH — Graceful degradation:</strong><br>
+@asynccontextmanager<br>
+async def lifespan(app):<br>
+    global db_pool<br>
+    try:<br>
+        db_pool = await asyncpg.create_pool(DATABASE_URL, min_size=2, max_size=10, ssl="require")<br>
+        print("✅ Database pool created")<br>
+    except Exception as e:<br>
+        print(f"⚠️ Database pool failed: {e}")<br>
+        db_pool = None  # App starts without database<br>
+    yield<br>
+    if db_pool:<br>
+        await db_pool.close()<br><br>
+<strong>UPDATE /health TO REFLECT DB STATUS:</strong><br>
+@app.get("/health")<br>
+async def health_check():<br>
+    return {<br>
+        "status": "healthy",<br>
+        "database": "connected" if db_pool else "unavailable"<br>
+    }<br><br>
+This way /health always returns 200, Railway healthcheck passes, and the database: "unavailable" field tells you something needs fixing without taking down the service.<br><br>
+<strong>UPDATE /api/patients TO HANDLE NULL POOL:</strong><br>
+@app.get("/api/patients")<br>
+async def get_patients():<br>
+    if not db_pool:<br>
+        raise HTTPException(503, "Database unavailable")<br>
+    ...<br><br>
+<strong>Interview gold:</strong> "Healthchecks and database connectivity are separate concerns. The app being alive is different from the database being reachable. Decoupling them means Railway can restart a pod without a cascade failure just because the DB had a 5-second hiccup."`
+  },
+
+  cors_blocked: {
+    type: "simulation",
+    title: "CORS Blocking Vercel → Railway API Calls",
+    question: "Your Next.js frontend on Vercel tries to call your Railway FastAPI backend. The browser console shows: 'Access to fetch at https://mindbridge-health-ai-production.up.railway.app/api/patients from origin https://mind-bridge-health-ai.vercel.app has been blocked by CORS policy.' How do you fix it?",
+    context: "CORS errors are extremely common in full-stack development. Show you understand what causes them and exactly how to fix them.",
+    ideal: `<strong>WHAT CORS IS:</strong><br>
+CORS (Cross-Origin Resource Sharing) is a browser security policy. When JavaScript on origin-A tries to fetch from origin-B, the browser first sends a preflight OPTIONS request to origin-B asking: "Do you allow requests from origin-A?" If origin-B doesn't respond with the right headers, the browser blocks the request before it even reaches your API code.<br><br>
+<strong>WHY IT'S HAPPENING:</strong><br>
+Vercel origin: https://mind-bridge-health-ai.vercel.app<br>
+Railway origin: https://mindbridge-health-ai-production.up.railway.app<br>
+Different domains = cross-origin = CORS applies<br><br>
+<strong>THE FIX — Add CORSMiddleware to FastAPI:</strong><br>
+from fastapi.middleware.cors import CORSMiddleware<br><br>
+app.add_middleware(<br>
+    CORSMiddleware,<br>
+    allow_origins=[<br>
+        "http://localhost:3000",<br>
+        "https://mind-bridge-health-ai.vercel.app"<br>
+    ],<br>
+    allow_credentials=True,<br>
+    allow_methods=["GET", "POST", "PUT", "DELETE"],<br>
+    allow_headers=["Authorization", "Content-Type"],<br>
+)<br><br>
+<strong>COMMON MISTAKES:</strong><br>
+❌ allow_origins=["*"] — Never use wildcard with allow_credentials=True. Browsers reject this combination.<br>
+❌ Missing the staging URL — Add all environments: localhost, staging, production<br>
+❌ Trailing slash — "https://mind-bridge-health-ai.vercel.app/" ≠ "https://mind-bridge-health-ai.vercel.app"<br>
+❌ Wrong order — CORSMiddleware must be added BEFORE other middleware<br><br>
+<strong>HOW TO VERIFY IT'S WORKING:</strong><br>
+Open browser DevTools → Network tab → find the failed request → look at Response Headers:<br>
+Access-Control-Allow-Origin: https://mind-bridge-health-ai.vercel.app ✅<br><br>
+<strong>Interview gold:</strong> "CORS is browser-enforced, not server-enforced. The server receives the request either way — CORS only affects browser clients. This is why Postman and curl work fine but browsers block it. The fix is always server-side: add the correct response headers."`
+  },
+
+  fastapi_deploy_interview: {
+    type: "interview",
+    title: "Walk Me Through Your FastAPI Deployment",
+    question: "Tell me about deploying the MindBridge FastAPI backend to production. What decisions did you make, what went wrong, and how did you fix it?",
+    context: "This is a direct question about Day 14's work. Use the structure: architecture → key decisions → debugging → lessons learned.",
+    ideal: `<strong>THE ARCHITECTURE:</strong><br>
+FastAPI backend deployed to Railway, connected to Railway PostgreSQL, exposed via public Railway domain. Vercel frontend calls the Railway API. Full production stack with no localhost dependencies.<br><br>
+<strong>KEY TECHNICAL DECISIONS:</strong><br><br>
+1. asyncpg over psycopg2:<br>
+FastAPI is async — using a synchronous database driver means every DB call blocks the entire thread. asyncpg is fully async, letting FastAPI handle hundreds of concurrent requests while waiting for DB responses. Critical for a healthcare platform where multiple case managers access the system simultaneously.<br><br>
+2. Connection pooling (min=2, max=10):<br>
+Opening a PostgreSQL connection takes ~100ms. With pooling, connections are reused — query latency drops to single-digit milliseconds. min_size=2 keeps warm connections ready. max_size=10 handles traffic bursts without overwhelming the database.<br><br>
+3. Non-fatal database startup:<br>
+Wrapped pool creation in try/except. If the database is temporarily unavailable during deployment, the app still starts and Railway healthcheck passes. The /health endpoint reports database: "unavailable" so we know to investigate without a full deployment failure.<br><br>
+<strong>WHAT WENT WRONG AND HOW I FIXED IT:</strong><br><br>
+Problem 1 — No start command:<br>
+Railway couldn't detect the FastAPI app because it was in a backend/ subdirectory. Fixed by setting Root Directory to "backend" in Railway Settings and manually setting the start command: uvicorn app.main:app --host 0.0.0.0 --port $PORT<br><br>
+Problem 2 — DATABASE_URL empty:<br>
+Railway auto-generates DATABASE_PUBLIC_URL for PostgreSQL services, not DATABASE_URL. The app was reading DATABASE_URL which was empty, defaulting to localhost:5432. Fixed by renaming DATABASE_PUBLIC_URL to DATABASE_URL in Railway's Variables tab.<br><br>
+Problem 3 — Port mismatch:<br>
+Generated the Railway domain with port 8000 but uvicorn was running on port 8080. Fixed by regenerating the domain with the correct port.<br><br>
+<strong>LESSONS LEARNED:</strong><br>
+Railway's auto-generated variable names don't always match what your code expects. Always verify environment variable names in the Variables tab after setup. The debug pattern: add explicit logging of os.environ values to confirm what the app actually receives at runtime.<br><br>
+<strong>Interview gold:</strong> "Every production deployment teaches you something. The DATABASE_PUBLIC_URL vs DATABASE_URL issue took 30 minutes to debug but now it's the first thing I check on any Railway deployment. That's how production experience compounds."`
+  },
+
+  async_vs_sync: {
+    type: "interview",
+    title: "Why Async Database Calls Matter in FastAPI",
+    question: "Why did you choose asyncpg over psycopg2 for MindBridge? Explain the performance difference between async and sync database calls in a FastAPI context.",
+    context: "This tests deep understanding of async programming. Show you know WHY async matters, not just that it's a best practice.",
+    ideal: `<strong>THE CORE PROBLEM WITH SYNC IN ASYNC FRAMEWORKS:</strong><br>
+FastAPI uses a single-threaded async event loop (uvicorn + asyncio). When you make a synchronous database call with psycopg2, the entire thread blocks — it sits idle waiting for PostgreSQL to respond. During that wait, no other requests can be processed.<br><br>
+<strong>CONCRETE EXAMPLE:</strong><br>
+Imagine 50 case managers log in simultaneously at shift start:<br><br>
+With psycopg2 (sync):<br>
+Request 1: connect to DB → wait 100ms → get data → respond<br>
+Request 2: BLOCKED until Request 1 completes<br>
+Request 3: BLOCKED until Request 2 completes<br>
+50 requests × 100ms = 5 seconds for the last case manager<br><br>
+With asyncpg (async):<br>
+Request 1: send DB query → yield control while waiting<br>
+Request 2: send DB query → yield control while waiting<br>
+Request 3: send DB query → yield control while waiting<br>
+All 50 queries in-flight simultaneously → all respond in ~100ms<br><br>
+<strong>THE CODE DIFFERENCE:</strong><br>
+# Sync (blocks event loop):<br>
+def get_patients():<br>
+    conn = psycopg2.connect(DATABASE_URL)<br>
+    return conn.execute("SELECT * FROM patients")<br><br>
+# Async (yields control while waiting):<br>
+async def get_patients():<br>
+    async with db_pool.acquire() as conn:<br>
+        return await conn.fetch("SELECT * FROM patients")<br><br>
+<strong>WHY THIS MATTERS FOR HEALTHCARE:</strong><br>
+Clinical workflows have synchronized access patterns — shift changes, morning rounds, crisis response. Multiple clinicians access the system simultaneously. Synchronous database calls under these conditions cause cascading delays that directly impact patient care response times.<br><br>
+<strong>WHEN SYNC IS ACCEPTABLE:</strong><br>
+Simple scripts, CLIs, one-off data migrations — anywhere you have one user doing one thing. Never acceptable in a production API with concurrent users.<br><br>
+<strong>Interview gold:</strong> "asyncpg isn't a preference — it's architecturally necessary for FastAPI. Using psycopg2 in FastAPI is like putting a traffic light on a highway. The framework is designed for concurrency; the database driver must match."`
+  },
+
+  connection_pooling_deep: {
+    type: "concept",
+    title: "Connection Pooling Deep Dive",
+    question: "Explain connection pooling from first principles. What problem does it solve, how does it work, and how should you configure pool sizes for a healthcare application?",
+    context: "Connection pooling appears in almost every backend interview. Show you understand it at the implementation level, not just 'it makes things faster.'",
+    ideal: `<strong>THE PROBLEM WITHOUT POOLING:</strong><br>
+Every database query requires: TCP handshake → SSL negotiation → PostgreSQL authentication → query execution → connection teardown. Steps 1-4 take ~100ms before your actual query runs. For a dashboard loading 10 patients, that's 1 second of pure connection overhead before any data moves.<br><br>
+<strong>HOW A POOL WORKS:</strong><br>
+A pool pre-creates N connections at startup and keeps them open permanently. When a request needs the database, it borrows a connection from the pool (microseconds), runs the query, returns the connection. No TCP handshakes, no SSL negotiations, no authentication on every request.<br><br>
+asyncpg pool lifecycle:<br>
+1. App starts → create_pool() opens min_size connections immediately<br>
+2. Request arrives → pool.acquire() returns an available connection<br>
+3. Query runs<br>
+4. async with block exits → connection returned to pool automatically<br>
+5. Next request reuses that connection instantly<br>
+6. If all connections busy → wait up to pool_timeout seconds<br>
+7. If load spikes → pool grows up to max_size connections<br>
+8. App shuts down → pool.close() cleanly closes all connections<br><br>
+<strong>CONFIGURING POOL SIZES:</strong><br>
+Rule of thumb: pool_size = (num_cores × 2) + effective_spindle_count<br>
+For MindBridge on Railway (1 core): min=2, max=10<br><br>
+Too small (min=1, max=3): Requests queue up under load, response times spike<br>
+Too large (max=100): Overwhelms PostgreSQL — each DB connection consumes ~5-10MB RAM<br><br>
+For healthcare specifically:<br>
+min_size=2: Always 2 warm connections ready — instant response for overnight on-call clinicians<br>
+max_size=10: Handles shift-change surge (50 case managers) by queuing requests fairly<br>
+ssl="require": HIPAA encryption in transit requirement<br><br>
+<strong>MONITORING POOL HEALTH:</strong><br>
+Watch for: pool exhaustion (requests timing out), connection leaks (pool never returns connections), stale connections (pool_pre_ping=True prevents this in SQLAlchemy)<br><br>
+<strong>Interview gold:</strong> "Pool sizing is a tradeoff between memory on the database server and latency under load. I start with (cores × 2) + 2, monitor p95 latency and connection wait times, then tune. The goal is zero connection wait time at peak load without exhausting database memory."`
+  },
+
+  railway_env_vars: {
+    type: "concept",
+    title: "Railway Environment Variables — Complete Guide",
+    question: "Explain Railway's environment variable system. What types exist, how are they injected, and what are the common pitfalls?",
+    context: "Environment variable issues caused real debugging time on Day 14. Show you understand the system deeply enough to never hit these issues again.",
+    ideal: `<strong>TYPES OF RAILWAY ENVIRONMENT VARIABLES:</strong><br><br>
+1. Service Variables (most common):<br>
+Set per-service in Variables tab. Only available to that service.<br>
+Example: DATABASE_URL for the FastAPI service<br><br>
+2. Shared Variables (project-level):<br>
+Set in Project Settings → Shared Variables. Available to ALL services in the project.<br>
+Good for: API keys used by multiple services, project-wide config<br><br>
+3. Auto-generated Variables:<br>
+Railway creates these automatically for managed services:<br>
+DATABASE_URL → internal connection string (postgres.railway.internal)<br>
+DATABASE_PUBLIC_URL → public connection string (switchback.proxy.rlwy.net)<br>
+PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD → individual components<br>
+PORT → the port your service should listen on (set by Railway)<br><br>
+4. Reference Variables:<br>
+Reference another service's variable: ${{Postgres.DATABASE_URL}}<br>
+Stays in sync automatically if the referenced value changes<br><br>
+<strong>HOW INJECTION WORKS:</strong><br>
+Variables are baked into the container environment at deploy time. Available via os.environ.get("KEY"). No .env file exists — load_dotenv() does nothing (or can interfere). Changes to variables trigger a redeploy to take effect.<br><br>
+<strong>COMMON PITFALLS:</strong><br>
+❌ Using DATABASE_URL when Railway generated DATABASE_PUBLIC_URL<br>
+Fix: Rename the variable or update your code to use DATABASE_PUBLIC_URL<br><br>
+❌ Using internal URL from external service<br>
+postgres.railway.internal only works Railway → Railway<br>
+Fix: Always use DATABASE_PUBLIC_URL for services connecting from outside Railway<br><br>
+❌ Invisible characters in variable names<br>
+Copy-pasting variable names can include invisible Unicode characters<br>
+Fix: Type variable names manually, never paste them<br><br>
+❌ Wrong environment (production vs staging)<br>
+Variables are environment-specific. Production variables don't exist in staging.<br>
+Fix: Set variables in each environment separately<br><br>
+<strong>BEST PRACTICE — Reference Variables:</strong><br>
+Instead of copy-pasting the PostgreSQL URL into your FastAPI service:<br>
+DATABASE_URL = ${{Postgres.DATABASE_PUBLIC_URL}}<br><br>
+If Railway rotates the PostgreSQL password, this updates automatically. No manual copy-paste, no stale credentials.<br><br>
+<strong>Interview gold:</strong> "The DATABASE_PUBLIC_URL vs DATABASE_URL confusion is Railway's most common gotcha. I now always use Reference Variables (${{Postgres.DATABASE_PUBLIC_URL}}) so credentials stay in sync automatically and I never have to copy-paste sensitive values."`
   }
 };
 
