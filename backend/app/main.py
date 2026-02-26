@@ -23,12 +23,12 @@ async def lifespan(app: FastAPI):
         )
         print("✅ Database pool created")
     except Exception as e:
-        print(f"⚠️ Database pool failed: {e}")
+        print(f"⚠️ Database connection error: {type(e).__name__}: {e}")
+        print(f"⚠️ DATABASE_URL starts with: {DATABASE_URL[:30] if DATABASE_URL else 'EMPTY'}")
         db_pool = None
     yield
     if db_pool:
         await db_pool.close()
-        print("✅ Database pool closed")
 
 app = FastAPI(
     title="MindBridge Health AI",
