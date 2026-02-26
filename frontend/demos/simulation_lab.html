@@ -365,7 +365,7 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-section">
-      <div class="sidebar-title">🎭 Simulations (13)</div>
+      <div class="sidebar-title">🎭 Simulations (16)</div>
       <button class="scenario-btn" onclick="loadScenario('login')" id="btn-login">
         <span class="icon">🔐</span>
         <span class="info">
@@ -485,10 +485,17 @@
           <div class="tag tag-sim">Simulation</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('session_expired')" id="btn-session_expired">
+        <span class="icon">⏰</span>
+        <span class="info">
+          <div class="name">Session Expired Mid-Shift</div>
+          <div class="tag tag-sim">Simulation</div>
+        </span>
+      </button>
     </div>
 
     <div class="sidebar-section">
-      <div class="sidebar-title">🎤 Interview Practice (11)</div>
+      <div class="sidebar-title">🎤 Interview Practice (16)</div>
       <button class="scenario-btn" onclick="loadScenario('whyhire')" id="btn-whyhire">
         <span class="icon">💼</span>
         <span class="info">
@@ -594,10 +601,24 @@
           <div class="tag tag-int">Interview</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('auth_interview')" id="btn-auth_interview">
+        <span class="icon">🔑</span>
+        <span class="info">
+          <div class="name">How Did You Implement Auth?</div>
+          <div class="tag tag-int">Interview</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('hipaa_auth_design')" id="btn-hipaa_auth_design">
+        <span class="icon">🏥</span>
+        <span class="info">
+          <div class="name">Design HIPAA-Compliant Auth</div>
+          <div class="tag tag-int">Interview</div>
+        </span>
+      </button>
     </div>
 
     <div class="sidebar-section">
-      <div class="sidebar-title">💡 Concept Check (6)</div>
+      <div class="sidebar-title">💡 Concept Check (12)</div>
       <button class="scenario-btn" onclick="loadScenario('docker')" id="btn-docker">
         <span class="icon">🐳</span>
         <span class="info">
@@ -668,6 +689,27 @@
           <div class="tag tag-con">Concept</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('nextauth_concept')" id="btn-nextauth_concept">
+        <span class="icon">🔐</span>
+        <span class="info">
+          <div class="name">NextAuth.js Deep Dive</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('middleware_concept')" id="btn-middleware_concept">
+        <span class="icon">🛡️</span>
+        <span class="info">
+          <div class="name">Next.js Middleware</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('jwt_hipaa')" id="btn-jwt_hipaa">
+        <span class="icon">🏥</span>
+        <span class="info">
+          <div class="name">JWT & HIPAA Session Rules</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
     </div>
   </div>
 
@@ -684,17 +726,17 @@
           <div class="welcome-card">
             <div class="icon">🎭</div>
             <div class="title">Simulations</div>
-            <div class="desc">13 real-world system scenarios including deployment and incident response</div>
+            <div class="desc">16 real-world system scenarios including deployment and incident response</div>
           </div>
           <div class="welcome-card">
             <div class="icon">🎤</div>
             <div class="title">Interview</div>
-            <div class="desc">11 interview scenarios including healthcare-specific design challenges</div>
+            <div class="desc">16 interview scenarios including healthcare-specific design challenges</div>
           </div>
           <div class="welcome-card">
             <div class="icon">💡</div>
             <div class="title">Concepts</div>
-            <div class="desc">6 deep-dive technical concepts: Docker, PostgreSQL, HIPAA, FHIR, HL7, Pooling</div>
+            <div class="desc">12 deep-dive technical concepts: Docker, PostgreSQL, HIPAA, FHIR, HL7, Pooling</div>
           </div>
         </div>
       </div>
@@ -771,7 +813,7 @@
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
-        <div class="stat-value" style="color:var(--accent)">42</div>
+        <div class="stat-value" style="color:var(--accent)">48</div>
         <div class="stat-label">Total Scenarios</div>
       </div>
       <div class="stat-divider"></div>
@@ -2320,6 +2362,176 @@ Repo root: E:\\MindBridge Health Care\\.env.local ← Next.js CANNOT see this<br
 Project root: E:\\MindBridge Health Care\\frontend\\patient-portal\\.env.local ← Next.js reads this<br><br>
 Next.js looks for .env.local relative to the directory where package.json lives. Always put it there.<br><br>
 <strong>Interview gold:</strong> "Environment variables solve two problems: security (credentials not in code) and flexibility (different values in dev vs production without changing code). The pattern is always the same: os.environ.get() in Python, process.env.VARIABLE in Next.js. The deployment platform provides the actual values."`
+  },
+
+  nextauth_concept: {
+    type: "concept",
+    title: "NextAuth.js Deep Dive",
+    question: "Explain NextAuth.js — what it is, what it handles automatically, and how MindBridge uses it.",
+    context: "Authentication is one of the most common interview topics. Show you understand it at the architectural level, not just 'I installed a library.'",
+    ideal: `<strong>What NextAuth.js is:</strong><br>
+NextAuth.js is a complete authentication solution for Next.js. It handles everything you'd otherwise build manually: JWT signing and verification, session management, CSRF protection, secure cookie handling, OAuth provider integration, and credential-based login.<br><br>
+<strong>What it handles automatically:</strong><br>
+- JWT token signing with NEXTAUTH_SECRET<br>
+- httpOnly cookie storage (XSS-proof)<br>
+- Session refresh and expiry<br>
+- CSRF token generation<br>
+- Callback URL validation<br>
+- All auth API routes via [...nextauth] catch-all<br><br>
+<strong>Three files in MindBridge:</strong><br>
+1. app/api/auth/[...nextauth]/route.ts — The auth handler. Configures providers, session strategy, JWT callbacks. CredentialsProvider validates demo@mindbridge.health / MindBridge2026! and returns user object with role.<br><br>
+2. middleware.ts — Protects routes at the edge using withAuth. Matcher: ['/dashboard/:path*', '/patients/:path*']. Unauthenticated requests redirect to login before page component ever runs.<br><br>
+3. app/page.tsx — Login form calls signIn('credentials', { redirect: false }). Checks result.ok — success pushes to /dashboard, failure shows error message.<br><br>
+<strong>HIPAA-specific configuration:</strong><br>
+- maxAge: 8 * 60 * 60 — 8 hours, one clinical shift<br>
+- strategy: 'jwt' — stateless tokens, no database session table needed<br>
+- httpOnly cookies — session token invisible to JavaScript<br><br>
+<strong>Interview gold:</strong> "I chose NextAuth over building auth from scratch because security primitives are easy to get wrong. NextAuth's JWT signing, CSRF protection, and cookie security are battle-tested. My job is to configure it correctly for healthcare requirements, not reinvent it."`
+  },
+
+  middleware_concept: {
+    type: "concept",
+    title: "Next.js Middleware — How Route Protection Works",
+    question: "Explain exactly how Next.js middleware protects routes. What runs, when, and what happens to unauthenticated requests?",
+    context: "Understanding middleware execution order is important for system design interviews. Show you know what happens at the edge.",
+    ideal: `<strong>What middleware is:</strong><br>
+Middleware runs at the edge — before a request reaches any page component, API route, or cached content. It intercepts every matching request and can redirect, rewrite, or add headers before anything else executes.<br><br>
+<strong>Execution order:</strong><br>
+1. Browser sends GET /dashboard<br>
+2. Next.js checks: does middleware.ts match this path?<br>
+3. matcher: ['/dashboard/:path*'] — YES, this matches<br>
+4. withAuth runs: checks for valid NextAuth session cookie<br>
+5a. Cookie valid → request passes through to dashboard page<br>
+5b. Cookie missing/expired → redirect to signIn page (/) immediately<br>
+6. Dashboard page component never executes for unauthenticated requests<br><br>
+<strong>Why this matters for security:</strong><br>
+Without middleware, you'd need to add session checks to every page component individually. One missed check = exposed patient data. Middleware is a single enforcement point — impossible to forget.<br><br>
+<strong>The matcher config:</strong><br>
+export const config = {<br>
+  matcher: ['/dashboard/:path*', '/patients/:path*']<br>
+}<br><br>
+:path* means "match this route and all sub-routes." /dashboard matches. /dashboard/reports matches. /dashboard/anything matches.<br><br>
+<strong>What withAuth does specifically:</strong><br>
+Reads the next-auth.session-token httpOnly cookie. Verifies the JWT signature using NEXTAUTH_SECRET. If valid: attach session to request and continue. If invalid/missing: redirect to pages.signIn URL.<br><br>
+<strong>Interview gold:</strong> "Middleware-based route protection is more secure than page-level checks because it's centralized. Change one file to add a new protected route. One config to see all protected routes. Defense in depth: even if a page component has a bug, middleware still blocks unauthenticated access."`
+  },
+
+  jwt_hipaa: {
+    type: "concept",
+    title: "JWT Sessions and HIPAA Compliance",
+    question: "How does MindBridge's JWT session configuration satisfy HIPAA security requirements? Walk through each HIPAA requirement and how it's met.",
+    context: "Healthcare interviews always test HIPAA knowledge. Show you've mapped technical implementation to specific compliance requirements.",
+    ideal: `<strong>HIPAA Security Rule — Technical Safeguards for Sessions:</strong><br><br>
+<strong>1. Automatic Logoff (§164.312(a)(2)(iii)):</strong><br>
+HIPAA requires: Implement electronic procedures that terminate an electronic session after a predetermined time of inactivity.<br>
+MindBridge implementation: maxAge: 8 * 60 * 60 in NextAuth config. JWT expires after 8 hours regardless of activity. Case manager must re-authenticate for each new shift.<br>
+Why 8 hours: Aligns with standard clinical shift length. A case manager who forgets to log out has their session expire at end of shift automatically.<br><br>
+<strong>2. Unique User Identification (§164.312(a)(2)(i)):</strong><br>
+HIPAA requires: Assign a unique name and/or number for identifying and tracking user identity.<br>
+MindBridge implementation: JWT payload includes user_id, email, and role. Every API request includes this token. Every audit log entry records user_id. No shared accounts — each clinician has unique credentials.<br><br>
+<strong>3. Encryption in Transit (§164.312(e)(2)(ii)):</strong><br>
+HIPAA requires: Implement a mechanism to encrypt and decrypt electronic PHI in transit.<br>
+MindBridge implementation: NextAuth session tokens stored in Secure cookies (HTTPS-only). TLS 1.3 encrypts all traffic. httpOnly prevents JavaScript access to tokens.<br><br>
+<strong>4. Audit Controls (§164.312(b)):</strong><br>
+HIPAA requires: Hardware, software, and/or procedural mechanisms that record and examine activity in information systems that contain or use ePHI.<br>
+MindBridge implementation: Every login logged to audit_log (user_id, timestamp, IP, action='LOGIN'). Every logout logged. Failed login attempts logged. Session token contains user identity for correlation.<br><br>
+<strong>5. Person or Entity Authentication (§164.312(d)):</strong><br>
+HIPAA requires: Implement procedures to verify that a person or entity seeking access to ePHI is the one claimed.<br>
+MindBridge implementation: CredentialsProvider validates email + bcrypt password hash. In production: MFA required for admin roles. JWT signed with RS256 — cannot be forged without the private key.<br><br>
+<strong>Interview gold:</strong> "I designed MindBridge's auth by starting with HIPAA requirements and mapping each one to a technical control. The 8-hour session isn't arbitrary — it's a specific response to §164.312(a)(2)(iii). That's the difference between compliance-aware engineering and just installing a library."`
+  },
+
+  auth_interview: {
+    type: "interview",
+    title: "How Did You Implement Authentication in MindBridge?",
+    question: "Walk me through how you added authentication to the MindBridge dashboard. What did you build, what decisions did you make, and what would you do differently in production?",
+    context: "This is a direct question about Day 13's work. You built it — own every decision. Use the structure: What I built → Why I built it that way → What production would look like.",
+    ideal: `<strong>WHAT I BUILT:</strong><br>
+Three components working together: NextAuth handler, middleware route protection, and updated login form.<br><br>
+The NextAuth handler at app/api/auth/[...nextauth]/route.ts configures CredentialsProvider with demo credentials and JWT sessions with 8-hour expiry. The [...nextauth] catch-all route automatically handles all auth endpoints — signin, signout, session, CSRF.<br><br>
+middleware.ts at the project root uses withAuth to protect /dashboard and /patients/* routes at the edge. Before any request reaches those pages, NextAuth verifies the session token. Invalid or missing token = redirect to login.<br><br>
+The login page calls signIn('credentials', { redirect: false }) and handles success/failure explicitly — success pushes to /dashboard, failure shows an error message without a page reload.<br><br>
+<strong>KEY DECISIONS:</strong><br>
+redirect: false in signIn() — gives me control over error handling. The default redirect: true would redirect to an error page on failure, which is bad UX for a clinical tool.<br><br>
+8-hour JWT expiry — aligns with clinical shift length. HIPAA §164.312(a)(2)(iii) requires automatic logoff. 8 hours is the standard clinical shift.<br><br>
+Middleware over page-level checks — centralized enforcement. One file protects all protected routes. Impossible to accidentally expose a route by forgetting to add a check.<br><br>
+<strong>WHAT PRODUCTION WOULD LOOK LIKE:</strong><br>
+Replace hardcoded credentials with PostgreSQL lookup: query users table, bcrypt.verify() the password hash. Add MFA (TOTP) for admin roles. Log every login attempt to audit_log. Add account lockout after 5 failed attempts. Consider adding OAuth (Microsoft/Google) for SSO with hospital identity providers.<br><br>
+<strong>Interview gold:</strong> "The demo implementation took 3 files and 30 minutes. The production implementation adds database validation, MFA, audit logging, and SSO. The architecture is identical — I just swap the authorize() function body and add logging middleware."`
+  },
+
+  hipaa_auth_design: {
+    type: "interview",
+    title: "Design HIPAA-Compliant Authentication",
+    question: "Design a complete authentication system for a healthcare application from scratch. What are the HIPAA requirements and how does each technical decision address them?",
+    context: "System design + HIPAA compliance combined. This is a senior-level question. Show you can connect regulatory requirements to architectural decisions.",
+    ideal: `<strong>START WITH HIPAA REQUIREMENTS (not technology):</strong><br>
+§164.312(a)(2)(i): Unique user identification — no shared accounts<br>
+§164.312(a)(2)(iii): Automatic logoff — session expiry<br>
+§164.312(b): Audit controls — log all access<br>
+§164.312(d): Person authentication — verify identity<br>
+§164.312(e)(2)(ii): Encryption in transit — TLS for all connections<br><br>
+<strong>LAYER 1 — Credential Security:</strong><br>
+Never store plain passwords. Use bcrypt with cost factor 12:<br>
+hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt(12))<br>
+Cost factor 12 = ~250ms to verify. Slow enough to prevent brute force, fast enough for login.<br><br>
+Enforce password complexity: minimum 12 characters, uppercase, number, special character. Healthcare credentials need to be strong.<br><br>
+<strong>LAYER 2 — Session Management:</strong><br>
+JWT tokens signed with RS256 (asymmetric). Private key signs, public key verifies. Even if public key leaks, tokens can't be forged.<br>
+Expiry: 8 hours (clinical shift). Refresh tokens: 7 days (for "remember this device" on personal devices only).<br>
+Store in httpOnly, Secure, SameSite=Strict cookies. httpOnly = JavaScript can't read. Secure = HTTPS only. SameSite=Strict = CSRF protection.<br><br>
+<strong>LAYER 3 — Multi-Factor Authentication:</strong><br>
+Required for: admin roles, accessing PHI in bulk, password resets.<br>
+Optional for: standard case managers (recommended but not required).<br>
+Implementation: TOTP (Google Authenticator compatible). Generate secret per user, store encrypted in database. Verify 6-digit code on login.<br><br>
+<strong>LAYER 4 — Audit Logging:</strong><br>
+Log every authentication event to immutable audit table:<br>
+INSERT INTO audit_log (user_id, action, ip_address, user_agent, success, timestamp)<br>
+VALUES (user.id, 'LOGIN', request.ip, request.headers['user-agent'], true, NOW())<br><br>
+Log: successful logins, failed attempts, logouts, password changes, MFA events.<br>
+Retain for 6 years (HIPAA minimum retention).<br><br>
+<strong>LAYER 5 — Account Protection:</strong><br>
+Lockout after 5 failed attempts (15-minute lockout).<br>
+Alert user and security team on suspicious activity (login from new country, 3 AM login).<br>
+Force password reset every 90 days for privileged accounts.<br><br>
+<strong>LAYER 6 — Session Termination:</strong><br>
+Automatic logoff at 8 hours.<br>
+Manual logout invalidates token server-side (maintain token blacklist in Redis).<br>
+Force logout all sessions on password change.<br><br>
+<strong>Interview gold:</strong> "HIPAA authentication isn't about picking the right library. It's about mapping each regulatory requirement to a technical control, then building those controls so they're impossible to bypass. Start with the requirement, then design the solution."`
+  },
+
+  session_expired: {
+    type: "simulation",
+    title: "Session Expired Mid-Shift",
+    question: "A case manager calls support: 'I was in the middle of entering a patient note and got kicked out. I lost everything I typed. This is unacceptable.' How do you respond technically and professionally?",
+    context: "Auth edge cases have real clinical impact. Show you understand both the technical fix and the human consequences.",
+    ideal: `<strong>WHAT HAPPENED TECHNICALLY:</strong><br>
+The 8-hour JWT session expired while the case manager was actively typing. Next.js middleware detected the expired token on the next API call or page navigation and redirected to login. The unsaved note was lost because it existed only in the browser's DOM — never persisted to the database.<br><br>
+<strong>PROFESSIONAL RESPONSE (what you say to the case manager):</strong><br>
+"I completely understand your frustration — losing clinical documentation is a serious problem and I'm sorry that happened. The session timeout is a HIPAA security requirement, but how we handle it is absolutely something we can improve. Let me explain what happened and what we're going to fix."<br><br>
+<strong>IMMEDIATE TECHNICAL FIX — Auto-save drafts:</strong><br>
+Save the note content to localStorage every 30 seconds while the case manager is typing:<br>
+useEffect(() => {<br>
+  const interval = setInterval(() => {<br>
+    localStorage.setItem('draft_note_' + patientId, noteContent);<br>
+  }, 30000);<br>
+  return () => clearInterval(interval);<br>
+}, [noteContent]);<br><br>
+On page load, check for saved draft:<br>
+const saved = localStorage.getItem('draft_note_' + patientId);<br>
+if (saved) showBanner("You have an unsaved draft. Restore it?");<br><br>
+<strong>BETTER FIX — Session expiry warning:</strong><br>
+Show a warning 10 minutes before session expires:<br>
+"Your session expires in 10 minutes. Save your work or click here to extend your session."<br><br>
+On click: call /api/auth/session to refresh the token. Session resets to 8 hours.<br><br>
+<strong>BEST FIX — Optimistic saving:</strong><br>
+Don't wait for the case manager to click Save. Auto-save to the database every 60 seconds as a draft:<br>
+POST /api/notes/draft { patient_id, content, saved_at }<br><br>
+When session expires and they log back in: "You have an unsaved draft from 2:47 PM. Continue where you left off?"<br><br>
+<strong>The HIPAA balance:</strong><br>
+The 8-hour timeout is non-negotiable — it's a regulatory requirement. But how the application handles the expiry IS negotiable. A good healthcare app warns before expiry, saves drafts, and restores work after re-authentication. The security requirement and the clinical UX don't have to conflict.<br><br>
+<strong>Interview gold:</strong> "Security requirements and user experience don't have to conflict. The session timeout is HIPAA-mandated. But auto-save, expiry warnings, and draft restoration make the timeout invisible to case managers 99% of the time. That's clinical-aware engineering."`
   }
 };
 
