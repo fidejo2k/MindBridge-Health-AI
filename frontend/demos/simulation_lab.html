@@ -365,7 +365,7 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-section">
-      <div class="sidebar-title">🎭 Simulations (19)</div>
+      <div class="sidebar-title">🎭 Simulations (21)</div>
       <button class="scenario-btn" onclick="loadScenario('login')" id="btn-login">
         <span class="icon">🔐</span>
         <span class="info">
@@ -513,10 +513,17 @@
           <div class="tag tag-sim">Simulation</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('stale_clinical_data')" id="btn-stale_clinical_data">
+        <span class="icon">⏱️</span>
+        <span class="info">
+          <div class="name">Stale Clinical Data Incident</div>
+          <div class="tag tag-sim">Simulation</div>
+        </span>
+      </button>
     </div>
 
     <div class="sidebar-section">
-      <div class="sidebar-title">🎤 Interview Practice (18)</div>
+      <div class="sidebar-title">🎤 Interview Practice (22)</div>
       <button class="scenario-btn" onclick="loadScenario('whyhire')" id="btn-whyhire">
         <span class="icon">💼</span>
         <span class="info">
@@ -650,10 +657,24 @@
           <div class="tag tag-int">Interview</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('full_stack_architecture')" id="btn-full_stack_architecture">
+        <span class="icon">🏗️</span>
+        <span class="info">
+          <div class="name">Walk Me Through Your Architecture</div>
+          <div class="tag tag-int">Interview</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('week3_technical_review')" id="btn-week3_technical_review">
+        <span class="icon">🎯</span>
+        <span class="info">
+          <div class="name">Week 3 Technical Review</div>
+          <div class="tag tag-int">Interview</div>
+        </span>
+      </button>
     </div>
 
     <div class="sidebar-section">
-      <div class="sidebar-title">💡 Concept Check (14)</div>
+      <div class="sidebar-title">💡 Concept Check (18)</div>
       <button class="scenario-btn" onclick="loadScenario('docker')" id="btn-docker">
         <span class="icon">🐳</span>
         <span class="info">
@@ -759,6 +780,20 @@
           <div class="tag tag-con">Concept</div>
         </span>
       </button>
+      <button class="scenario-btn" onclick="loadScenario('server_vs_client')" id="btn-server_vs_client">
+        <span class="icon">⚡</span>
+        <span class="info">
+          <div class="name">Server vs Client Components</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
+      <button class="scenario-btn" onclick="loadScenario('next_public_vars')" id="btn-next_public_vars">
+        <span class="icon">🔑</span>
+        <span class="info">
+          <div class="name">NEXT_PUBLIC_ Variables</div>
+          <div class="tag tag-con">Concept</div>
+        </span>
+      </button>
     </div>
   </div>
 
@@ -770,22 +805,22 @@
       <div class="welcome" id="welcome">
         <div style="font-size:48px">🏥</div>
         <h2>Welcome to Simulation Lab</h2>
-        <p>Practice real scenarios you'll face in Healthcare AI Engineer interviews. 55 scenarios covering simulations, interviews, and technical concepts.</p>
+        <p>Practice real scenarios you'll face in Healthcare AI Engineer interviews. 61 scenarios covering simulations, interviews, and technical concepts.</p>
         <div class="welcome-cards">
           <div class="welcome-card">
             <div class="icon">🎭</div>
             <div class="title">Simulations</div>
-            <div class="desc">19 real-world system scenarios including deployment and incident response</div>
+            <div class="desc">21 real-world system scenarios including deployment and incident response</div>
           </div>
           <div class="welcome-card">
             <div class="icon">🎤</div>
             <div class="title">Interview</div>
-            <div class="desc">18 interview scenarios including healthcare-specific design challenges</div>
+            <div class="desc">22 interview scenarios including healthcare-specific design challenges</div>
           </div>
           <div class="welcome-card">
             <div class="icon">💡</div>
             <div class="title">Concepts</div>
-            <div class="desc">14 deep-dive technical concepts: Docker, PostgreSQL, HIPAA, FHIR, HL7, Pooling</div>
+            <div class="desc">18 deep-dive technical concepts: Docker, PostgreSQL, HIPAA, FHIR, HL7, Pooling</div>
           </div>
         </div>
       </div>
@@ -2800,7 +2835,7 @@ DATABASE_PUBLIC_URL → public connection string (switchback.proxy.rlwy.net)<br>
 PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD → individual components<br>
 PORT → the port your service should listen on (set by Railway)<br><br>
 4. Reference Variables:<br>
-Reference another service's variable: ${{Postgres.DATABASE_URL}}<br>
+Reference another service's variable: \${{Postgres.DATABASE_URL}}<br>
 Stays in sync automatically if the referenced value changes<br><br>
 <strong>HOW INJECTION WORKS:</strong><br>
 Variables are baked into the container environment at deploy time. Available via os.environ.get("KEY"). No .env file exists — load_dotenv() does nothing (or can interfere). Changes to variables trigger a redeploy to take effect.<br><br>
@@ -2818,9 +2853,155 @@ Variables are environment-specific. Production variables don't exist in staging.
 Fix: Set variables in each environment separately<br><br>
 <strong>BEST PRACTICE — Reference Variables:</strong><br>
 Instead of copy-pasting the PostgreSQL URL into your FastAPI service:<br>
-DATABASE_URL = ${{Postgres.DATABASE_PUBLIC_URL}}<br><br>
+DATABASE_URL = \${{Postgres.DATABASE_PUBLIC_URL}}<br><br>
 If Railway rotates the PostgreSQL password, this updates automatically. No manual copy-paste, no stale credentials.<br><br>
-<strong>Interview gold:</strong> "The DATABASE_PUBLIC_URL vs DATABASE_URL confusion is Railway's most common gotcha. I now always use Reference Variables (${{Postgres.DATABASE_PUBLIC_URL}}) so credentials stay in sync automatically and I never have to copy-paste sensitive values."`
+<strong>Interview gold:</strong> "The DATABASE_PUBLIC_URL vs DATABASE_URL confusion is Railway's most common gotcha. I now always use Reference Variables (\${{Postgres.DATABASE_PUBLIC_URL}}) so credentials stay in sync automatically and I never have to copy-paste sensitive values."`
+  },
+
+  full_stack_architecture: {
+    type: "interview",
+    title: "Walk Me Through Your Full Stack Architecture",
+    question: "Describe the complete MindBridge architecture. How does a request flow from a clinician's browser to the database and back? What decisions did you make at each layer?",
+    context: "This is the most important interview question you'll face. Practice until you can answer it in under 3 minutes with confidence.",
+    ideal: `<strong>THE THREE LAYERS:</strong><br><br>
+<strong>Layer 1 — Frontend (Vercel + Next.js):</strong><br>
+Next.js 16 deployed on Vercel's global CDN. When a clinician visits the app, they hit the login page. NextAuth.js handles authentication — credentials validated, JWT token issued with 8-hour expiry aligned to clinical shift length. Token stored in httpOnly cookie — invisible to JavaScript, CSRF-protected.<br><br>
+Next.js middleware runs at the edge on every request to /dashboard and /patients/*. No valid JWT = instant redirect to login. The dashboard page component never executes for unauthenticated requests.<br><br>
+<strong>Layer 2 — Backend (Railway + FastAPI):</strong><br>
+FastAPI deployed on Railway. When the dashboard loads, a Server Component calls GET /api/patients on the FastAPI service. FastAPI validates the request, acquires a connection from the asyncpg pool, queries PostgreSQL, and returns JSON.<br><br>
+Key decisions: asyncpg over psycopg2 for non-blocking queries. Connection pool (min=2, max=10) eliminates 100ms connection overhead on every request. CORS configured for Vercel origin only — no wildcard.<br><br>
+<strong>Layer 3 — Database (Railway + PostgreSQL):</strong><br>
+PostgreSQL managed by Railway. SSL required for all connections — satisfies HIPAA §164.312(e)(2)(ii) encryption in transit. Patient data includes risk levels, medication adherence, crisis calls, diagnoses.<br><br>
+<strong>COMPLETE REQUEST FLOW:</strong><br>
+1. Clinician opens dashboard<br>
+2. Next.js middleware checks JWT cookie → valid → continue<br>
+3. Server Component calls FastAPI /api/patients<br>
+4. FastAPI acquires pool connection → queries PostgreSQL<br>
+5. Patient data returned as JSON<br>
+6. Server Component renders HTML with patient data<br>
+7. HTML delivered to clinician's browser via Vercel CDN<br><br>
+<strong>Interview gold:</strong> "Every architectural decision maps to a clinical requirement. 8-hour sessions = shift alignment. Server Components = credentials never reach browser. asyncpg = concurrent case manager access during shift changes. I didn't just pick technologies — I mapped requirements to solutions."`
+  },
+
+  week3_technical_review: {
+    type: "interview",
+    title: "Week 3 Technical Review — Everything You Built",
+    question: "Summarize everything you built in Week 3. For each major component, explain what it does, why you built it that way, and what you'd improve in a production system with real users.",
+    context: "This is a comprehensive review of Days 11-15. Use this to practice telling the full MindBridge story confidently.",
+    ideal: `<strong>DAY 11 — Next.js Frontend + Vercel Deployment:</strong><br>
+Built: Login page, dashboard with patient table, CI/CD pipeline via GitHub → Vercel.<br>
+Why: Next.js Server Components let the dashboard query PostgreSQL server-side — patient data never passes through the browser. Vercel provides global CDN with zero configuration.<br>
+Production improvement: Add error boundaries, loading skeletons, and offline handling for poor clinical connectivity environments.<br><br>
+<strong>DAY 12 — Railway PostgreSQL Connection:</strong><br>
+Built: Next.js API route, dashboard Server Component querying Railway PostgreSQL directly, environment variable management.<br>
+Why: Server Components eliminate the localhost dependency that breaks Vercel deployments. Environment variables in Vercel dashboard keep credentials out of code.<br>
+Production improvement: Add database migrations with Prisma or Alembic instead of manual SQL. Add connection health monitoring.<br><br>
+<strong>SECURITY INCIDENT — GitGuardian:</strong><br>
+What happened: Exposed Railway credentials in public GitHub repo. Detected within 24 hours.<br>
+Response: Rotated password immediately, removed hardcoded URLs, cleaned git history with git-filter-repo. Total resolution: under 30 minutes.<br>
+Production improvement: Pre-commit hooks with detect-secrets to prevent exposure before push.<br><br>
+<strong>DAY 13 — NextAuth.js Authentication:</strong><br>
+Built: CredentialsProvider, JWT sessions, Next.js middleware route protection, updated login form.<br>
+Why: NextAuth handles JWT signing, CSRF protection, and httpOnly cookies — security primitives I'd likely get wrong building from scratch. 8-hour expiry satisfies HIPAA §164.312(a)(2)(iii).<br>
+Production improvement: Replace demo credentials with PostgreSQL user lookup + bcrypt verification. Add MFA for admin roles. Add login attempt rate limiting.<br><br>
+<strong>DAY 14 — FastAPI Deployment on Railway:</strong><br>
+Built: FastAPI with asyncpg connection pooling, /health and /api/patients endpoints, Railway deployment with Nixpacks.<br>
+Why: asyncpg is non-blocking — essential for FastAPI's async architecture. Connection pooling eliminates per-request connection overhead.<br>
+Production improvement: Add Pydantic response models for type-safe API contracts. Add request logging middleware. Add rate limiting per user.<br><br>
+<strong>DAY 15 — Full Stack Wired End-to-End:</strong><br>
+Built: Next.js dashboard calling FastAPI instead of PostgreSQL directly. Portfolio README with architecture diagram.<br>
+Why: Separating frontend from database through an API layer enables independent scaling, versioning, and security boundaries.<br>
+Production improvement: Add API versioning (/api/v1/patients). Add response caching for non-sensitive data. Add OpenAPI documentation.<br><br>
+<strong>Interview gold:</strong> "Week 3 built the complete production foundation. Week 4 adds AI agents on top of this stack — patient risk scoring, clinical documentation assistance, and database management automation. The architecture was designed from day one to support AI capabilities."`
+  },
+
+  server_vs_client: {
+    type: "concept",
+    title: "Server vs Client Components in Next.js",
+    question: "Explain the difference between Server Components and Client Components in Next.js. When does MindBridge use each and why?",
+    context: "This is a core Next.js concept that appears in every frontend interview. Show you understand the rendering model deeply.",
+    ideal: `<strong>SERVER COMPONENTS (default in Next.js App Router):</strong><br>
+Run on the server. Can access databases, file system, environment variables directly. Never sent to the browser — only the rendered HTML output is sent. Cannot use browser APIs (window, document), React hooks (useState, useEffect), or event handlers.<br><br>
+MindBridge dashboard page.tsx is a Server Component:<br>
+- Calls FastAPI backend directly from the server<br>
+- DATABASE_URL never reaches the browser<br>
+- Rendered HTML sent to Vercel's edge network<br>
+- Patient data rendered server-side — faster initial load<br><br>
+<strong>CLIENT COMPONENTS ('use client' directive):</strong><br>
+Run in the browser. Can use React hooks, event handlers, browser APIs. Must fetch data via API calls — cannot access databases directly. JavaScript bundle sent to browser.<br><br>
+MindBridge login page.tsx is a Client Component:<br>
+- Uses useState for email/password form state<br>
+- Uses useRouter for programmatic navigation after login<br>
+- Calls signIn() from next-auth/react (client-side library)<br>
+- Must be 'use client' because it uses hooks and event handlers<br><br>
+<strong>THE DECISION FRAMEWORK:</strong><br>
+Use Server Component when: fetching data, accessing secrets, no interactivity needed<br>
+Use Client Component when: user interaction, React hooks, browser APIs, real-time updates<br><br>
+<strong>COMMON MISTAKE:</strong><br>
+Making everything 'use client' because it's familiar from older React. This sends more JavaScript to the browser, exposes environment variables, and loses server-side rendering benefits.<br><br>
+<strong>Interview gold:</strong> "The App Router's default of Server Components is a security feature as much as a performance feature. Sensitive data — API keys, database queries, patient information — stays on the server by default. You have to explicitly opt into client-side rendering with 'use client'."`
+  },
+
+  next_public_vars: {
+    type: "concept",
+    title: "NEXT_PUBLIC_ Environment Variables",
+    question: "Explain Next.js environment variables. What is NEXT_PUBLIC_, when should you use it, and what should never have it?",
+    context: "Environment variable mistakes are a common source of security vulnerabilities. Show you understand the exposure model.",
+    ideal: `<strong>HOW NEXT.JS HANDLES ENV VARS:</strong><br>
+Next.js reads from .env.local (local dev) and deployment platform variables (Vercel). Variables WITHOUT NEXT_PUBLIC_ are only available server-side — in Server Components, API routes, and middleware. Variables WITH NEXT_PUBLIC_ are bundled into the JavaScript sent to the browser — available everywhere including client components.<br><br>
+<strong>SAFE TO USE NEXT_PUBLIC_:</strong><br>
+NEXT_PUBLIC_API_URL — Railway FastAPI URL (not a secret, visible in Network tab anyway)<br>
+NEXT_PUBLIC_APP_NAME — Display text<br>
+NEXT_PUBLIC_VERSION — Version number<br>
+NEXT_PUBLIC_POSTHOG_KEY — Analytics keys designed to be public<br><br>
+<strong>NEVER USE NEXT_PUBLIC_:</strong><br>
+DATABASE_URL — Contains database password<br>
+NEXTAUTH_SECRET — Signs JWT tokens, exposure = session forgery<br>
+ANTHROPIC_API_KEY — Paid API key, exposure = billing fraud<br>
+Any password, token, or private key<br><br>
+<strong>THE EXPOSURE TEST:</strong><br>
+Ask: "Would I be comfortable if this value appeared in the browser's JavaScript bundle, visible to anyone who opens DevTools → Sources?"<br>
+Yes → NEXT_PUBLIC_ is fine<br>
+No → Never add NEXT_PUBLIC_<br><br>
+<strong>VERCEL'S WARNING:</strong><br>
+Vercel shows a warning on every NEXT_PUBLIC_ variable: "This exposes the value to the browser." This is expected behavior — it's confirming you made a conscious choice, not warning of an error.<br><br>
+<strong>Interview gold:</strong> "The NEXT_PUBLIC_ prefix is a deliberate security boundary. Anything without it is server-only by default — a secure default. You have to actively choose to expose a value to the browser. I treat that choice like a security review: would I be comfortable with this in the browser's source code?"`
+  },
+
+  stale_clinical_data: {
+    type: "simulation",
+    title: "Stale Clinical Data Incident",
+    question: "A psychiatrist reports that a patient showing as LOW risk on the dashboard attempted self-harm. The patient's risk level was updated to HIGH in the database 2 hours ago but the dashboard still shows LOW. How do you investigate and fix this?",
+    context: "Caching clinical data has patient safety implications. Show you understand the technical and ethical dimensions of this incident.",
+    ideal: `<strong>IMMEDIATE RESPONSE:</strong><br>
+This is a patient safety incident, not just a technical bug. Immediate steps:<br>
+1. Confirm the database shows HIGH risk — verify the source of truth<br>
+2. Hard refresh the dashboard — confirm it still shows LOW<br>
+3. Check when the last deployment was — could be a build-time prerender issue<br>
+4. Escalate to clinical leadership immediately — do not wait for technical fix<br><br>
+<strong>TECHNICAL INVESTIGATION:</strong><br>
+Check 1 — Is force-dynamic set on dashboard?<br>
+If missing, Next.js prerenders the page at build time. The snapshot from 2 hours ago (before risk update) is served to every clinician.<br>
+Fix: export const dynamic = 'force-dynamic'<br><br>
+Check 2 — Is cache: 'no-store' set on the fetch call?<br>
+async function getPatients() {<br>
+  const res = await fetch(API_URL, { cache: 'no-store' }) // Required!<br>
+}<br>
+Without no-store, Next.js caches the fetch response. Risk level changes in the database don't propagate until cache expires.<br><br>
+Check 3 — Is FastAPI caching responses?<br>
+Check for any @cache decorators or Redis caching on the /api/patients endpoint<br>
+Clinical data endpoints must never be cached<br><br>
+Check 4 — Is the database update actually committed?<br>
+Run: SELECT risk_level, updated_at FROM patients WHERE id = X<br>
+Confirm the update exists and wasn't rolled back<br><br>
+<strong>THE FIX:</strong><br>
+export const dynamic = 'force-dynamic' + cache: 'no-store' together guarantee:<br>
+- Page never prerendered at build time<br>
+- Fetch never returns cached data<br>
+- Every dashboard load = fresh database query<br><br>
+<strong>POST-INCIDENT:</strong><br>
+Add real-time risk alerts — don't wait for clinicians to refresh the dashboard. WebSocket or Server-Sent Events push HIGH risk changes immediately to all active sessions.<br><br>
+<strong>Interview gold:</strong> "This incident illustrates why healthcare applications need different defaults than consumer apps. Caching improves performance but can directly harm patients when clinical data is involved. Every caching decision in MindBridge is a clinical safety decision first."`
   }
 };
 
